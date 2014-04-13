@@ -10,6 +10,8 @@
 
 @interface TLPNote : SKEmitterNode
 
+@property (weak, nonatomic) SKEmitterNode *emitter;
+
 + (instancetype)makeNote:(int)note withFrame:(CGRect)frame;
 - (void)playNote;
 

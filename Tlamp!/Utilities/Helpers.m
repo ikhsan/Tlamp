@@ -28,8 +28,8 @@ SKColor* color(int note)
 
 CGPoint positionForStartOfLine(int line, CGRect frame)
 {
-    return CGPointMake(CGRectGetMidX(frame), CGRectGetHeight(frame) * .9);
-//    return CGPointMake((CGRectGetWidth(frame) * .2) * line, CGRectGetHeight(frame) - 2.0);
+//    return CGPointMake(CGRectGetMidX(frame), CGRectGetHeight(frame) * .9);
+    return CGPointMake((CGRectGetWidth(frame) * .2) * line, CGRectGetHeight(frame) - 4.0);
 }
 
 CGPoint positionForEndOfLine(int line, CGRect frame)
@@ -49,9 +49,14 @@ CGPoint positionForNoteGivenY(int note, CGFloat y, CGRect frame)
     return CGPointMake(x, y);
 }
 
+CGFloat positionForBaseline(CGRect frame)
+{
+    return CGRectGetHeight(frame) * .2;
+}
+
 CGPoint positionForNote(int note, CGRect frame)
 {
-    CGFloat y = CGRectGetHeight(frame) * .25;
+    CGFloat y = positionForBaseline(frame);
     return positionForNoteGivenY(note, y, frame);
 }
 

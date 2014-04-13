@@ -11,7 +11,6 @@
 
 @interface TLPNote ()
 
-@property (weak, nonatomic) SKEmitterNode *emitter;
 @property int note;
 
 @end
