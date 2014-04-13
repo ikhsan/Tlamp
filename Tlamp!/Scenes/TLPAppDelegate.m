@@ -7,7 +7,7 @@
 //
 
 #import "TLPAppDelegate.h"
-#import "TLPMyScene.h"
+#import "TLPMainScene.h"
 
 @implementation TLPAppDelegate
 
@@ -16,7 +16,7 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     /* Pick a size for the scene */
-    SKScene *scene = [TLPMyScene sceneWithSize:CGSizeMake(1024, 768)];
+    SKScene *scene = [TLPMainScene sceneWithSize:CGSizeMake(1280, 800)];
 
     /* Set the scale mode to scale to fit the window */
     scene.scaleMode = SKSceneScaleModeAspectFit;

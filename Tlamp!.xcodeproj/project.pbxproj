@@ -7,20 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4604600218F9D79F00D2AF79 /* HitParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4604600018F9D79F00D2AF79 /* HitParticle.sks */; };
+		4604600318F9D79F00D2AF79 /* bokeh.png in Resources */ = {isa = PBXBuildFile; fileRef = 4604600118F9D79F00D2AF79 /* bokeh.png */; };
+		46423D6B18FAE05D00468D05 /* hit.png in Resources */ = {isa = PBXBuildFile; fileRef = 46423D6A18FAE05D00468D05 /* hit.png */; };
+		46423D6D18FAF18100468D05 /* Helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 46423D6C18FAF18100468D05 /* Helpers.m */; };
+		46423D7A18FAF35600468D05 /* TLPNote.m in Sources */ = {isa = PBXBuildFile; fileRef = 46423D7418FAF35600468D05 /* TLPNote.m */; };
+		46423D7B18FAF35600468D05 /* TLPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 46423D7718FAF35600468D05 /* TLPAppDelegate.m */; };
+		46423D7C18FAF35600468D05 /* TLPMainScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 46423D7918FAF35600468D05 /* TLPMainScene.m */; };
+		46423D7F18FAFEFF00468D05 /* TLPLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 46423D7E18FAFEFF00468D05 /* TLPLine.m */; };
+		46B0C06E18F9D6E400FE7256 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B0C06D18F9D6E400FE7256 /* spark.png */; };
+		46B60CAF18FA0A1300810F51 /* SKColor+Tlamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 46B60CAE18FA0A1300810F51 /* SKColor+Tlamp.m */; };
 		46EAB3BB18F9D042002AAEA8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46EAB3BA18F9D042002AAEA8 /* Cocoa.framework */; };
 		46EAB3BD18F9D042002AAEA8 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46EAB3BC18F9D042002AAEA8 /* SpriteKit.framework */; };
 		46EAB3C718F9D042002AAEA8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 46EAB3C518F9D042002AAEA8 /* InfoPlist.strings */; };
 		46EAB3C918F9D042002AAEA8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 46EAB3C818F9D042002AAEA8 /* main.m */; };
 		46EAB3CD18F9D042002AAEA8 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 46EAB3CB18F9D042002AAEA8 /* Credits.rtf */; };
 		46EAB3CF18F9D042002AAEA8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 46EAB3CE18F9D042002AAEA8 /* MainMenu.xib */; };
-		46EAB3D118F9D042002AAEA8 /* TLPMyScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 46EAB3D018F9D042002AAEA8 /* TLPMyScene.m */; };
-		46EAB3D418F9D042002AAEA8 /* TLPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 46EAB3D318F9D042002AAEA8 /* TLPAppDelegate.m */; };
-		46EAB3D718F9D042002AAEA8 /* Spaceship.png in Resources */ = {isa = PBXBuildFile; fileRef = 46EAB3D618F9D042002AAEA8 /* Spaceship.png */; };
 		46EAB3D918F9D042002AAEA8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46EAB3D818F9D042002AAEA8 /* Images.xcassets */; };
 		46EAB3E018F9D042002AAEA8 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46EAB3DF18F9D042002AAEA8 /* XCTest.framework */; };
 		46EAB3E118F9D042002AAEA8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46EAB3BA18F9D042002AAEA8 /* Cocoa.framework */; };
 		46EAB3E918F9D042002AAEA8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 46EAB3E718F9D042002AAEA8 /* InfoPlist.strings */; };
 		46EAB3EB18F9D042002AAEA8 /* Tlamp_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 46EAB3EA18F9D042002AAEA8 /* Tlamp_Tests.m */; };
+		46EAB40518F9D116002AAEA8 /* talempong_pacik_01.wav in Resources */ = {isa = PBXBuildFile; fileRef = 46EAB40018F9D116002AAEA8 /* talempong_pacik_01.wav */; };
+		46EAB40618F9D116002AAEA8 /* talempong_pacik_02.wav in Resources */ = {isa = PBXBuildFile; fileRef = 46EAB40118F9D116002AAEA8 /* talempong_pacik_02.wav */; };
+		46EAB40718F9D116002AAEA8 /* talempong_pacik_03.wav in Resources */ = {isa = PBXBuildFile; fileRef = 46EAB40218F9D116002AAEA8 /* talempong_pacik_03.wav */; };
+		46EAB40818F9D116002AAEA8 /* talempong_pacik_04.wav in Resources */ = {isa = PBXBuildFile; fileRef = 46EAB40318F9D116002AAEA8 /* talempong_pacik_04.wav */; };
+		46EAB40918F9D116002AAEA8 /* talempong_pacik_05.wav in Resources */ = {isa = PBXBuildFile; fileRef = 46EAB40418F9D116002AAEA8 /* talempong_pacik_05.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +46,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4604600018F9D79F00D2AF79 /* HitParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = HitParticle.sks; path = Particles/HitParticle.sks; sourceTree = "<group>"; };
+		4604600118F9D79F00D2AF79 /* bokeh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bokeh.png; path = Particles/bokeh.png; sourceTree = "<group>"; };
+		46423D6A18FAE05D00468D05 /* hit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = hit.png; path = Particles/hit.png; sourceTree = "<group>"; };
+		46423D6C18FAF18100468D05 /* Helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Helpers.m; path = Utilities/Helpers.m; sourceTree = "<group>"; };
+		46423D6E18FAF18900468D05 /* Helpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Helpers.h; sourceTree = "<group>"; };
+		46423D7318FAF35600468D05 /* TLPNote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPNote.h; sourceTree = "<group>"; };
+		46423D7418FAF35600468D05 /* TLPNote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLPNote.m; sourceTree = "<group>"; };
+		46423D7618FAF35600468D05 /* TLPAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPAppDelegate.h; sourceTree = "<group>"; };
+		46423D7718FAF35600468D05 /* TLPAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLPAppDelegate.m; sourceTree = "<group>"; };
+		46423D7818FAF35600468D05 /* TLPMainScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPMainScene.h; sourceTree = "<group>"; };
+		46423D7918FAF35600468D05 /* TLPMainScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLPMainScene.m; sourceTree = "<group>"; };
+		46423D7D18FAFEFF00468D05 /* TLPLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPLine.h; sourceTree = "<group>"; };
+		46423D7E18FAFEFF00468D05 /* TLPLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLPLine.m; sourceTree = "<group>"; };
+		46B0C06D18F9D6E400FE7256 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = Particles/spark.png; sourceTree = "<group>"; };
+		46B60CAD18FA0A1300810F51 /* SKColor+Tlamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SKColor+Tlamp.h"; path = "Utilities/SKColor+Tlamp.h"; sourceTree = "<group>"; };
+		46B60CAE18FA0A1300810F51 /* SKColor+Tlamp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SKColor+Tlamp.m"; path = "Utilities/SKColor+Tlamp.m"; sourceTree = "<group>"; };
 		46EAB3B718F9D042002AAEA8 /* Tlamp!.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tlamp!.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		46EAB3BA18F9D042002AAEA8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		46EAB3BC18F9D042002AAEA8 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
@@ -46,17 +74,17 @@
 		46EAB3CA18F9D042002AAEA8 /* Tlamp!-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tlamp!-Prefix.pch"; sourceTree = "<group>"; };
 		46EAB3CC18F9D042002AAEA8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		46EAB3CE18F9D042002AAEA8 /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
-		46EAB3D018F9D042002AAEA8 /* TLPMyScene.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TLPMyScene.m; sourceTree = "<group>"; };
-		46EAB3D218F9D042002AAEA8 /* TLPMyScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TLPMyScene.h; sourceTree = "<group>"; };
-		46EAB3D318F9D042002AAEA8 /* TLPAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TLPAppDelegate.m; sourceTree = "<group>"; };
-		46EAB3D518F9D042002AAEA8 /* TLPAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TLPAppDelegate.h; sourceTree = "<group>"; };
-		46EAB3D618F9D042002AAEA8 /* Spaceship.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Spaceship.png; sourceTree = "<group>"; };
 		46EAB3D818F9D042002AAEA8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		46EAB3DE18F9D042002AAEA8 /* Tlamp!Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tlamp!Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		46EAB3DF18F9D042002AAEA8 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		46EAB3E618F9D042002AAEA8 /* Tlamp!Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Tlamp!Tests-Info.plist"; sourceTree = "<group>"; };
 		46EAB3E818F9D042002AAEA8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		46EAB3EA18F9D042002AAEA8 /* Tlamp_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tlamp_Tests.m; sourceTree = "<group>"; };
+		46EAB40018F9D116002AAEA8 /* talempong_pacik_01.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = talempong_pacik_01.wav; sourceTree = "<group>"; };
+		46EAB40118F9D116002AAEA8 /* talempong_pacik_02.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = talempong_pacik_02.wav; sourceTree = "<group>"; };
+		46EAB40218F9D116002AAEA8 /* talempong_pacik_03.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = talempong_pacik_03.wav; sourceTree = "<group>"; };
+		46EAB40318F9D116002AAEA8 /* talempong_pacik_04.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = talempong_pacik_04.wav; sourceTree = "<group>"; };
+		46EAB40418F9D116002AAEA8 /* talempong_pacik_05.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = talempong_pacik_05.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +109,39 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		46423D7218FAF35600468D05 /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				46423D7318FAF35600468D05 /* TLPNote.h */,
+				46423D7418FAF35600468D05 /* TLPNote.m */,
+				46423D7D18FAFEFF00468D05 /* TLPLine.h */,
+				46423D7E18FAFEFF00468D05 /* TLPLine.m */,
+			);
+			path = Objects;
+			sourceTree = "<group>";
+		};
+		46423D7518FAF35600468D05 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				46423D7618FAF35600468D05 /* TLPAppDelegate.h */,
+				46423D7718FAF35600468D05 /* TLPAppDelegate.m */,
+				46423D7818FAF35600468D05 /* TLPMainScene.h */,
+				46423D7918FAF35600468D05 /* TLPMainScene.m */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		46B60CB018FA0A1B00810F51 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				46B60CAD18FA0A1300810F51 /* SKColor+Tlamp.h */,
+				46B60CAE18FA0A1300810F51 /* SKColor+Tlamp.m */,
+				46423D6E18FAF18900468D05 /* Helpers.h */,
+				46423D6C18FAF18100468D05 /* Helpers.m */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
 		46EAB3AE18F9D042002AAEA8 = {
 			isa = PBXGroup;
 			children = (
@@ -125,12 +186,9 @@
 			isa = PBXGroup;
 			children = (
 				46EAB3CE18F9D042002AAEA8 /* MainMenu.xib */,
-				46EAB3D018F9D042002AAEA8 /* TLPMyScene.m */,
-				46EAB3D218F9D042002AAEA8 /* TLPMyScene.h */,
-				46EAB3D318F9D042002AAEA8 /* TLPAppDelegate.m */,
-				46EAB3D518F9D042002AAEA8 /* TLPAppDelegate.h */,
-				46EAB3D618F9D042002AAEA8 /* Spaceship.png */,
-				46EAB3D818F9D042002AAEA8 /* Images.xcassets */,
+				46B60CB018FA0A1B00810F51 /* Utilities */,
+				46423D7518FAF35600468D05 /* Scenes */,
+				46423D7218FAF35600468D05 /* Objects */,
 				46EAB3C318F9D042002AAEA8 /* Supporting Files */,
 			);
 			path = "Tlamp!";
@@ -139,6 +197,9 @@
 		46EAB3C318F9D042002AAEA8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				46EAB40A18F9D509002AAEA8 /* Particles */,
+				46EAB3FF18F9D116002AAEA8 /* Audios */,
+				46EAB3D818F9D042002AAEA8 /* Images.xcassets */,
 				46EAB3C418F9D042002AAEA8 /* Tlamp!-Info.plist */,
 				46EAB3C518F9D042002AAEA8 /* InfoPlist.strings */,
 				46EAB3C818F9D042002AAEA8 /* main.m */,
@@ -164,6 +225,30 @@
 				46EAB3E718F9D042002AAEA8 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		46EAB3FF18F9D116002AAEA8 /* Audios */ = {
+			isa = PBXGroup;
+			children = (
+				46EAB40018F9D116002AAEA8 /* talempong_pacik_01.wav */,
+				46EAB40118F9D116002AAEA8 /* talempong_pacik_02.wav */,
+				46EAB40218F9D116002AAEA8 /* talempong_pacik_03.wav */,
+				46EAB40318F9D116002AAEA8 /* talempong_pacik_04.wav */,
+				46EAB40418F9D116002AAEA8 /* talempong_pacik_05.wav */,
+			);
+			name = Audios;
+			path = audios;
+			sourceTree = "<group>";
+		};
+		46EAB40A18F9D509002AAEA8 /* Particles */ = {
+			isa = PBXGroup;
+			children = (
+				46B0C06D18F9D6E400FE7256 /* spark.png */,
+				46423D6A18FAE05D00468D05 /* hit.png */,
+				4604600018F9D79F00D2AF79 /* HitParticle.sks */,
+				4604600118F9D79F00D2AF79 /* bokeh.png */,
+			);
+			name = Particles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -242,11 +327,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				46EAB3D718F9D042002AAEA8 /* Spaceship.png in Resources */,
+				46EAB40918F9D116002AAEA8 /* talempong_pacik_05.wav in Resources */,
+				46B0C06E18F9D6E400FE7256 /* spark.png in Resources */,
+				46423D6B18FAE05D00468D05 /* hit.png in Resources */,
 				46EAB3D918F9D042002AAEA8 /* Images.xcassets in Resources */,
+				46EAB40618F9D116002AAEA8 /* talempong_pacik_02.wav in Resources */,
 				46EAB3C718F9D042002AAEA8 /* InfoPlist.strings in Resources */,
+				4604600318F9D79F00D2AF79 /* bokeh.png in Resources */,
+				46EAB40818F9D116002AAEA8 /* talempong_pacik_04.wav in Resources */,
+				46EAB40518F9D116002AAEA8 /* talempong_pacik_01.wav in Resources */,
+				4604600218F9D79F00D2AF79 /* HitParticle.sks in Resources */,
 				46EAB3CD18F9D042002AAEA8 /* Credits.rtf in Resources */,
 				46EAB3CF18F9D042002AAEA8 /* MainMenu.xib in Resources */,
+				46EAB40718F9D116002AAEA8 /* talempong_pacik_03.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,9 +358,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46B60CAF18FA0A1300810F51 /* SKColor+Tlamp.m in Sources */,
 				46EAB3C918F9D042002AAEA8 /* main.m in Sources */,
-				46EAB3D418F9D042002AAEA8 /* TLPAppDelegate.m in Sources */,
-				46EAB3D118F9D042002AAEA8 /* TLPMyScene.m in Sources */,
+				46423D6D18FAF18100468D05 /* Helpers.m in Sources */,
+				46423D7C18FAF35600468D05 /* TLPMainScene.m in Sources */,
+				46423D7A18FAF35600468D05 /* TLPNote.m in Sources */,
+				46423D7B18FAF35600468D05 /* TLPAppDelegate.m in Sources */,
+				46423D7F18FAFEFF00468D05 /* TLPLine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -474,6 +571,7 @@
 				46EAB3F018F9D042002AAEA8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		46EAB3F118F9D042002AAEA8 /* Build configuration list for PBXNativeTarget "Tlamp!Tests" */ = {
 			isa = XCConfigurationList;
@@ -482,6 +580,7 @@
 				46EAB3F318F9D042002AAEA8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
