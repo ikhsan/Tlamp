@@ -12,5 +12,6 @@ NSString* loadParticle(NSString *name);
 SKColor* color(int note);
 CGPoint positionForStartOfLine(int line, CGRect frame);;
 CGPoint positionForEndOfLine(int line, CGRect frame);
+CGPoint positionForNoteGivenY(int note, CGFloat y, CGRect frame);
 CGPoint positionForNote(int note, CGRect frame);
 

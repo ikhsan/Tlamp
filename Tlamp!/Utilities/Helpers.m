@@ -37,17 +37,21 @@ CGPoint positionForEndOfLine(int line, CGRect frame)
     return CGPointMake((CGRectGetWidth(frame) / 3.) * (line-1), 0.);
 }
 
-CGPoint positionForNote(int note, CGRect frame)
+CGPoint positionForNoteGivenY(int note, CGFloat y, CGRect frame)
 {
     // find gradient
     CGPoint p1 = positionForStartOfLine(note, frame);
     CGPoint p2 = positionForEndOfLine(note, frame);
     CGFloat m = (p2.y - p1.y) / (p2.x - p1.x);
-    
+
     // find x from equation (y - y1) = m (x - x1)
-    CGFloat y = CGRectGetHeight(frame) * .25;
     CGFloat x = ((y - p1.y) / m) + p1.x;
-    
     return CGPointMake(x, y);
+}
+
+CGPoint positionForNote(int note, CGRect frame)
+{
+    CGFloat y = CGRectGetHeight(frame) * .25;
+    return positionForNoteGivenY(note, y, frame);
 }
 
