@@ -7,7 +7,6 @@
 //
 
 #import "TLPNote.h"
-#import "Helpers.h"
 
 @interface TLPNote ()
 

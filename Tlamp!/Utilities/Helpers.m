@@ -26,6 +26,11 @@ SKColor* color(int note)
     return colors[note];
 }
 
+double beatInterval(double bpm) {
+    return (60000. / (1 *  bpm)) / 1000.;
+}
+
+
 CGPoint positionForStartOfLine(int line, CGRect frame)
 {
 //    return CGPointMake(CGRectGetMidX(frame), CGRectGetHeight(frame) * .9);

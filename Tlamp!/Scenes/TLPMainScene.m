@@ -7,29 +7,33 @@
 //
 
 #import "SKColor+Tlamp.h"
-#import "Helpers.h"
+#import "SKAction+Tlamp.h"
 
 #import "TLPNote.h"
 #import "TLPLine.h"
+#import "TLPGuideNote.h"
 
 #import "TLPMainScene.h"
 
 NSString *const MetroLine = @"me.ikhsan.tlamp.metroLine";
-NSString *const NoteLine = @"me.ikhsan.tlamp.noteLine";
-NSString *const NoteGuide = @"me.ikhsan.tlamp.noteGuide";
+NSString *const BaseLine = @"me.ikhsan.tlamp.baseLine";
+NSString *const NoteGuideLine = @"me.ikhsan.tlamp.noteGuideLine";
 NSString *const MetroAction = @"me.ikhsan.tlamp.metroAction";
-static CGFloat threshold = 1.;
+static CGFloat threshold = .5;
 
 @interface TLPMainScene ()
 
+@property NSInteger ticker;
 @property CGFloat bpm;
+
 @property (getter = isPlaying) BOOL playing;
+@property (getter = isGuidePlaying) BOOL guidePlaying;
+
+@property (nonatomic, getter = isPlayerPlayingOne) BOOL playerPlayingOne;
+@property (nonatomic, getter = isPlayerPlayingTwo) BOOL playerPlayingTwo;
+@property (strong, nonatomic) NSArray *pattern;
 
 @end
-
-double beatInterval(double bpm) {
-    return (60000. / (1 *  bpm)) / 1000.;
-}
 
 @implementation TLPMainScene
 
@@ -38,13 +42,28 @@ double beatInterval(double bpm) {
     if (!(self = [super initWithSize:size])) return nil;
 
     self.backgroundColor = [SKColor colorWithWhite:.05 alpha:1.0];
-    self.bpm = 90.0;
+    self.bpm = 120.0;
+    self.guidePlaying = YES;
     [self drawTheLines];
     
     for (int i=1; i <= 4; i++) {
         [self noteHit:i];
     }
     [self tick];
+    
+//    self.pattern1 = @[
+//        @[@0, @0, @0, @1, @0, @0, @1, @0],
+//        @[@0, @0, @0, @0, @0, @0, @0, @0],
+//        @[@1, @1, @0, @0, @1, @0, @0, @0],
+//        @[@0, @0, @1, @0, @1, @0, @1, @1]
+//    ];
+
+    self.pattern = @[
+        @[@0, @0, @1, @0, @0, @0, @0, @0],
+        @[@0, @0, @0, @1, @1, @0, @1, @0],
+        @[@0, @0, @0, @0, @1, @0, @1, @1],
+        @[@1, @1, @0, @0, @0, @0, @0, @0]
+    ];
 
     return self;
 }
@@ -69,7 +88,7 @@ double beatInterval(double bpm) {
         }
         
         TLPLine *line = [TLPLine lineWithColor:color(i) from:p1 to:p2];
-        if (i == 0) line.name = NoteLine;
+        line.name = (i != 0)? NoteGuideLine : BaseLine;
         [self addChild:line];
     }
 }
@@ -85,119 +104,110 @@ double beatInterval(double bpm) {
 
 #pragma mark - Metronome
 
+- (void)startMetro
+{
+    SKAction *wait = [SKAction waitForDuration:beatInterval(self.bpm) / 2.];
+    
+    SKAction *advanceTicker = [SKAction runBlock:^{
+        self.ticker++;
+        if (self.ticker >= 9) self.ticker = 1;
+    }];
+    
+    SKAction *tickerMetro = [SKAction sequence:@[[SKAction runBlock:^{
+        [self metronomeTick:(self.ticker % 2 == 1)];
+    }], wait]];
+    SKAction *tickerNote = [SKAction sequence:@[[SKAction runBlock:^{
+        [self tickNote];
+    }], wait]];
+    
+    SKAction *moveTicker = [SKAction sequence:@[advanceTicker, [SKAction group:@[tickerMetro, tickerNote]]]];
+    
+    SKAction *metro = [SKAction repeatActionForever:moveTicker];
+    [self runAction:metro withKey:MetroAction];
+}
+
+- (void)stopMetro
+{
+    // remove existing note guides
+    [[self children] enumerateObjectsUsingBlock:^(SKNode *node, NSUInteger idx, BOOL *stop) {
+        if (![node.name isEqualToString:BaseLine] && ![node.name isEqualToString:NoteGuideLine])
+        {
+            [node runAction:[SKAction fadeAlphaTo:0. duration:.4] completion:^{
+                [node removeFromParent];
+            }];
+        }
+    }];
+    
+    // remove existing actions
+    [self removeActionForKey:MetroAction];
+    
+    // reset ticker
+    self.ticker = 0;
+}
+
 - (void)startStopMetronome
 {
     if (!self.isPlaying)
-    {
-        SKAction *tickEven = [SKAction runBlock:^{
-            [self metronomeTick:YES];
-        }];
-        SKAction *tickOdd = [SKAction runBlock:^{
-            [self metronomeTick:NO];
-        }];
-        SKAction *wait = [SKAction waitForDuration:beatInterval(self.bpm)];
-        SKAction *tickerMetro = [SKAction sequence:@[tickEven, wait, tickOdd, wait, tickOdd, wait, tickOdd, wait]];
-        
-        SKAction *tickNote = [SKAction runBlock:^{
-            [self noteTick:(arc4random_uniform(4)+1)];
-        }];
-        SKAction *waitNote = [SKAction waitForDuration:beatInterval(self.bpm) / 2.];
-        SKAction *tickerNote = [SKAction sequence:@[
-            tickNote, waitNote,
-            tickNote, waitNote,
-            tickNote, waitNote,
-            tickNote, waitNote,
-            tickNote, waitNote,
-            tickNote, waitNote,
-            tickNote, waitNote,
-            tickNote, waitNote,
-        ]];
-        
-        SKAction *ticker = [SKAction group:@[tickerMetro, tickerNote]];
-        
-        SKAction *metro = [SKAction repeatActionForever:ticker];
-        [self runAction:metro withKey:MetroAction];
-    }
+        [self startMetro];
     else
-    {
-        [self removeActionForKey:MetroAction];
-    }
+        [self stopMetro];
     
     self.playing = !self.isPlaying;
+}
+
+#pragma mark - Tickers
+
+- (void)tickNote
+{
+    for (int i=0; i < 4; i++) {
+        if (![self.pattern[i][self.ticker - 1] boolValue]) continue;
+        [self noteTick:(i+1)];
+    }
 }
 
 - (void)metronomeTick:(BOOL)even
 {
     CGFloat width = positionForStartOfLine(4, self.frame).x - positionForStartOfLine(1, self.frame).x;
-    SKColor *color = even? [SKColor tlp_orangeColor] : [[SKColor tlp_orangeColor] colorWithAlphaComponent:.5];
+    SKColor *color = even? [SKColor tlp_orangeColor] : [[SKColor tlp_orangeColor] colorWithAlphaComponent:.2];
+    
     SKSpriteNode *line = [[SKSpriteNode alloc] initWithColor:color size:CGSizeMake(width, 6.)];
-    line.name = MetroLine;
+    line.name = even? MetroLine : @"";
     line.position = CGPointMake(CGRectGetMidX(self.frame), positionForStartOfLine(1, self.frame).y);
     [self addChild:line];
     
+    // metro line's movement
     CGFloat s = (positionForNote(4, self.frame).x - positionForNote(1, self.frame).x) / (line.size.width);
+    CGPoint p1 = CGPointMake(line.position.x, positionForBaseline(self.frame));
+    SKAction *moveAndScale = [SKAction moveTo:p1 scaleXBy:s yBy:1. tempo:self.bpm];
     
-    CGFloat beat = beatInterval(self.bpm);
-    
-    // line's movement
-    SKAction *move = [SKAction moveByX:0.
-                                     y:(positionForBaseline(self.frame) - positionForStartOfLine(1, self.frame).y)
-                              duration:(beat * 4)];
-    SKAction *scale = [SKAction scaleXBy:s y:1. duration:(beat * 4)];
-    SKAction *moveAndScale = [SKAction group:@[move, scale]];
-    moveAndScale.timingMode = SKActionTimingEaseIn;
-    
-    // line's fade out
-    SKAction *fadeOut = [SKAction fadeAlphaTo:0. duration:(beat * .66)];
-    SKAction *moveFadeOut = [SKAction moveToY:0.0 duration:beat];
-    SKAction *scaleFadeOut = [SKAction scaleXBy:(CGRectGetWidth(self.frame) / s) y:1. duration:beat];
-    SKAction *fades = [SKAction group:@[fadeOut, moveFadeOut, scaleFadeOut]];
-    
+    CGPoint p2 = CGPointMake(CGRectGetMidX(self.frame), -10.0);
+    SKAction *fadeOut = [SKAction fadesTo:p2 scaleXBy:1.1 yBy:1. tempo:self.bpm];
     SKAction *removeMe = [SKAction removeFromParent];
     
-    SKAction *metroWalk = [SKAction sequence:@[moveAndScale, fades, removeMe]];
+    // run
+    SKAction *metroWalk = [SKAction sequence:@[moveAndScale, fadeOut, removeMe]];
     [line runAction:metroWalk];
 }
 
 - (void)noteTick:(int)n
 {
-    CGFloat beat = beatInterval(self.bpm);
-    
-    SKSpriteNode *note = [[SKSpriteNode alloc] initWithImageNamed:@"hit.png"];
-    note.name = NoteGuide;
-    note.colorBlendFactor = .7;
-    note.color = color(n);
-    note.position = positionForStartOfLine(n, self.frame);
-    
-    [self addChild:note];
+    TLPGuideNote *guideNote = [TLPGuideNote guideNoteWithNote:n];
+    guideNote.position = positionForStartOfLine(n, self.frame);
+    [self addChild:guideNote];
     
     // note's movement
-    CGPoint p = positionForNote(n, self.frame);
-    SKAction *move = [SKAction moveTo:p duration:(beat * 4)];
-    SKAction *scale = [SKAction scaleBy:2. duration:(beat * 4)];
-    SKAction *moveAndScale = [SKAction group:@[move, scale]];
-    
-    // note's fade out
-    SKAction *fadeOut = [SKAction fadeAlphaTo:0. duration:(beat * .66)];
-    SKAction *moveFadeOut = [SKAction moveTo:positionForEndOfLine(n, self.frame) duration:beat];
-    SKAction *scaleFadeOut = [SKAction scaleBy:1.1 duration:beat];
-    SKAction *fades = [SKAction group:@[fadeOut, moveFadeOut, scaleFadeOut]];
-    fades.timingMode = SKActionTimingEaseIn;
-
+    SKAction *moveAndScale = [SKAction moveTo:positionForNote(n, self.frame) scaleBy:2. tempo:self.bpm];
+    SKAction *fadeOut = [SKAction fadesTo:positionForEndOfLine(n, self.frame) scaleBy:1.1 tempo:self.bpm];
     SKAction *removeMe = [SKAction removeFromParent];
     
-    SKAction *noteWalk = [SKAction sequence:@[moveAndScale, fades, removeMe]];
-    [note runAction:noteWalk];
+    // run
+    SKAction *noteWalk = [SKAction sequence:@[moveAndScale, fadeOut, removeMe]];
+    [guideNote runAction:noteWalk];
 }
 
 - (void)tick
 {
     [self runAction:[SKAction playSoundFileNamed:@"talempong_pacik_05.wav" waitForCompletion:NO]];
-}
-
-- (void)temporary:(int)note
-{
-    [self runAction:[SKAction playSoundFileNamed:[NSString stringWithFormat:@"talempong_pacik_0%d.wav", note] waitForCompletion:NO]];
 }
 
 #pragma mark - Catching keyboard events
@@ -217,6 +227,15 @@ double beatInterval(double bpm) {
         case 49: [self startStopMetronome];
             break;
             
+        case 27:
+            self.playerPlayingOne = !self.isPlayerPlayingOne;
+            NSLog(@"player 1: %d", self.isPlayerPlayingOne);
+            break;
+        case 24:
+            self.playerPlayingTwo = !self.isPlayerPlayingTwo;
+            NSLog(@"player 2: %d", self.isPlayerPlayingTwo);
+            break;
+            
         default: break;
     }
 }
@@ -230,21 +249,20 @@ double beatInterval(double bpm) {
     [[self children] enumerateObjectsUsingBlock:^(SKNode *node, NSUInteger idx, BOOL *stop) {
         if ([node.name isEqualToString:MetroLine])
         {
-            if (fabs(y - node.position.y) < threshold ) [self tick];
+            if (fabs(y - node.position.y) < threshold )
+                [self tick];
         }
         else if ([node.name isEqualToString:NoteGuide])
         {
-            if (fabs(y - node.position.y) < threshold )
+            TLPGuideNote *guideNote = (TLPGuideNote *)node;
+            if (fabs(y - guideNote.position.y) < threshold )
             {
-                if (fabs( positionForNote(1, self.frame).x - node.position.x ) < 10.)
-                    [self temporary:1];
-                else if (fabs( positionForNote(2, self.frame).x - node.position.x ) < 10.)
-                    [self temporary:2];
-                else if (fabs( positionForNote(3, self.frame).x - node.position.x ) < 10.)
-                    [self temporary:3];
-                else if (fabs( positionForNote(4, self.frame).x - node.position.x ) < 10.)
-                    [self temporary:4];
-
+                if (self.isGuidePlaying)
+                {
+                    if ((((guideNote.note == 1) || (guideNote.note == 2)) && (!self.isPlayerPlayingOne)) ||
+                        (((guideNote.note == 3) || (guideNote.note == 4)) && (!self.isPlayerPlayingTwo)))
+                        [guideNote playNote];
+                }
             }
         }
     }];

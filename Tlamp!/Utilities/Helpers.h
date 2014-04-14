@@ -10,6 +10,7 @@
 
 NSString* loadParticle(NSString *name);
 SKColor* color(int note);
+double beatInterval(double bpm);
 
 CGPoint positionForStartOfLine(int line, CGRect frame);;
 CGFloat positionForBaseline(CGRect frame);

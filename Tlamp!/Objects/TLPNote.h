@@ -8,7 +8,7 @@
 
 #import <SpriteKit/SpriteKit.h>
 
-@interface TLPNote : SKEmitterNode
+@interface TLPNote : SKSpriteNode
 
 @property (weak, nonatomic) SKEmitterNode *emitter;
 
