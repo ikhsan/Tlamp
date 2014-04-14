@@ -8,6 +8,7 @@
 
 #import "SKColor+Tlamp.h"
 #import "SKAction+Tlamp.h"
+#import "SKLabelNode+Tlamp.h"
 
 #import "TLPNote.h"
 #import "TLPLine.h"
@@ -19,6 +20,11 @@ NSString *const MetroLine = @"me.ikhsan.tlamp.metroLine";
 NSString *const BaseLine = @"me.ikhsan.tlamp.baseLine";
 NSString *const NoteGuideLine = @"me.ikhsan.tlamp.noteGuideLine";
 NSString *const MetroAction = @"me.ikhsan.tlamp.metroAction";
+
+NSString *const TitleKey = @"me.ikhsan.tlamp.title";
+NSString *const SubtitleKey = @"me.ikhsan.tlamp.subtitle";
+
+
 static CGFloat threshold = .5;
 
 @interface TLPMainScene ()
@@ -68,6 +74,72 @@ static CGFloat threshold = .5;
     return self;
 }
 
+- (void)setPlayerPlayingOne:(BOOL)playerPlayingOne
+{
+    _playerPlayingOne = playerPlayingOne;
+    
+    [self showMessage:_playerPlayingOne?
+     @"Please try play red & yellow notes" :
+     @"Computer will play red & yellow notes for you"];
+}
+
+- (void)setPlayerPlayingTwo:(BOOL)playerPlayingTwo
+{
+    _playerPlayingTwo = playerPlayingTwo;
+    
+    [self showMessage:_playerPlayingTwo?
+     @"Please try play green & blue notes" :
+     @"Computer will play green & blue notes for you"];
+}
+
+#pragma mark - Titles
+
+- (void)didMoveToView:(SKView *)view
+{
+    [self createAndShowTitle];
+}
+
+- (void)createAndShowTitle
+{
+    SKLabelNode *titleNode = (SKLabelNode *)[self childNodeWithName:TitleKey];
+    SKLabelNode *subtitleNode = (SKLabelNode *)[self childNodeWithName:SubtitleKey];
+    
+    if (!titleNode)
+    {
+        SKLabelNode *titleNode = [SKLabelNode labelHUDWithMessage:@"T L A M P !"];
+        titleNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + 20.);
+        titleNode.name = TitleKey;
+        [self addChild:titleNode];
+    }
+    
+    if (!subtitleNode)
+    {
+        SKLabelNode *subtitleNode = [SKLabelNode smallLabelWithMessage:@"hit anything to start..."];
+        subtitleNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) - 20.);
+        subtitleNode.name = SubtitleKey;
+        [self addChild:subtitleNode];
+    }
+    
+    [titleNode runAction:[SKAction fadeIn]];
+    [subtitleNode runAction:[SKAction fadeIn]];
+}
+
+- (void)removeTitle
+{
+    SKLabelNode *titleNode = (SKLabelNode *)[self childNodeWithName:TitleKey];
+    SKLabelNode *subtitleNode = (SKLabelNode *)[self childNodeWithName:SubtitleKey];
+
+    [titleNode runAction:[SKAction fadeOut] completion:^{
+        [titleNode removeFromParent];
+    }];
+    [subtitleNode runAction:[SKAction fadeOut] completion:^{
+        [subtitleNode removeFromParent];
+    }];
+
+}
+
+#pragma mark - Line drawers
+
 - (void)drawTheLines
 {
     // draw 4 notes / 0th for 'current position' line
@@ -93,6 +165,28 @@ static CGFloat threshold = .5;
     }
 }
 
+#pragma mark - Message actions
+
+- (void)showMessage:(NSString *)message
+{
+    [self showMessage:message small:NO duration:1.];
+}
+
+- (void)showSmallMessage:(NSString *)message
+{
+    [self showMessage:message small:YES duration:1.];
+}
+
+- (void)showMessage:(NSString *)message small:(BOOL)isSmall duration:(NSTimeInterval)duration
+{
+    SKLabelNode *labelNode = (!isSmall)? [SKLabelNode labelHUDWithMessage:message] : [SKLabelNode smallLabelWithMessage:message];
+    labelNode.alpha = 0.0;
+    labelNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + (isSmall? -1 : 1) * 20.0);
+    [self addChild:labelNode];
+    
+    [labelNode runAction:[SKAction flashWithDuration:duration]];
+}
+
 #pragma mark - Note hits actions
 
 - (void)noteHit:(int)n
@@ -104,15 +198,48 @@ static CGFloat threshold = .5;
 
 #pragma mark - Metronome
 
+- (void)startStopMetronome
+{
+    if (!self.isPlaying)
+    {
+        [self startCountdown];
+        [self startMetro];
+    }
+    else
+    {
+        [self stopMetro];
+    }
+    
+    self.playing = !self.isPlaying;
+}
+
+- (void)startCountdown
+{
+    CGFloat beat = beatInterval(self.bpm);
+    [self showMessage:@"pattern 1" small:NO duration:(beat * 3)];
+    
+    SKAction *wait = [SKAction waitForDuration:beat];
+    
+    __block int count = 3;
+    SKAction *countAction = [SKAction sequence:@[[SKAction runBlock:^{
+        [self showMessage:[NSString stringWithFormat:@"%d", count] small:YES duration:beat];
+        count--;
+    }], wait]];
+    [self runAction:[SKAction repeatAction:countAction count:count]];
+    
+}
+
 - (void)startMetro
 {
     SKAction *wait = [SKAction waitForDuration:beatInterval(self.bpm) / 2.];
     
+    // tick every beat
     SKAction *advanceTicker = [SKAction runBlock:^{
         self.ticker++;
         if (self.ticker >= 9) self.ticker = 1;
     }];
     
+    // tick metro & note
     SKAction *tickerMetro = [SKAction sequence:@[[SKAction runBlock:^{
         [self metronomeTick:(self.ticker % 2 == 1)];
     }], wait]];
@@ -120,6 +247,7 @@ static CGFloat threshold = .5;
         [self tickNote];
     }], wait]];
     
+    // play metro & guide
     SKAction *moveTicker = [SKAction sequence:@[advanceTicker, [SKAction group:@[tickerMetro, tickerNote]]]];
     
     SKAction *metro = [SKAction repeatActionForever:moveTicker];
@@ -143,16 +271,6 @@ static CGFloat threshold = .5;
     
     // reset ticker
     self.ticker = 0;
-}
-
-- (void)startStopMetronome
-{
-    if (!self.isPlaying)
-        [self startMetro];
-    else
-        [self stopMetro];
-    
-    self.playing = !self.isPlaying;
 }
 
 #pragma mark - Tickers
@@ -214,6 +332,9 @@ static CGFloat threshold = .5;
 
 - (void)keyDown:(NSEvent *)theEvent
 {
+    if ([self childNodeWithName:TitleKey])
+        [self removeTitle];
+    
     switch ([theEvent keyCode]) {
         case 18: [self noteHit:1];
             break;
@@ -229,17 +350,14 @@ static CGFloat threshold = .5;
             
         case 27:
             self.playerPlayingOne = !self.isPlayerPlayingOne;
-            NSLog(@"player 1: %d", self.isPlayerPlayingOne);
             break;
         case 24:
             self.playerPlayingTwo = !self.isPlayerPlayingTwo;
-            NSLog(@"player 2: %d", self.isPlayerPlayingTwo);
             break;
             
         default: break;
     }
 }
-
 
 #pragma mark - Update
 
@@ -261,7 +379,7 @@ static CGFloat threshold = .5;
                 {
                     if ((((guideNote.note == 1) || (guideNote.note == 2)) && (!self.isPlayerPlayingOne)) ||
                         (((guideNote.note == 3) || (guideNote.note == 4)) && (!self.isPlayerPlayingTwo)))
-                        [guideNote playNote];
+                        [self noteHit:(int)guideNote.note];
                 }
             }
         }

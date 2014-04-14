@@ -17,6 +17,7 @@
 		46423D7F18FAFEFF00468D05 /* TLPLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 46423D7E18FAFEFF00468D05 /* TLPLine.m */; };
 		4692791D18FBCC8500E541A5 /* TLPGuideNote.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692791C18FBCC8500E541A5 /* TLPGuideNote.m */; };
 		4692792018FBD10C00E541A5 /* SKAction+Tlamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692791F18FBD10C00E541A5 /* SKAction+Tlamp.m */; };
+		4692792418FC0AF000E541A5 /* SKLabelNode+Tlamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692792318FC0AF000E541A5 /* SKLabelNode+Tlamp.m */; };
 		46B0C06E18F9D6E400FE7256 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B0C06D18F9D6E400FE7256 /* spark.png */; };
 		46B60CAF18FA0A1300810F51 /* SKColor+Tlamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 46B60CAE18FA0A1300810F51 /* SKColor+Tlamp.m */; };
 		46EAB3BB18F9D042002AAEA8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46EAB3BA18F9D042002AAEA8 /* Cocoa.framework */; };
@@ -65,6 +66,8 @@
 		4692791E18FBD10C00E541A5 /* SKAction+Tlamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SKAction+Tlamp.h"; path = "Utilities/SKAction+Tlamp.h"; sourceTree = "<group>"; };
 		4692791F18FBD10C00E541A5 /* SKAction+Tlamp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SKAction+Tlamp.m"; path = "Utilities/SKAction+Tlamp.m"; sourceTree = "<group>"; };
 		4692792118FBD12000E541A5 /* Helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Helpers.h; path = Utilities/Helpers.h; sourceTree = "<group>"; };
+		4692792218FC0AF000E541A5 /* SKLabelNode+Tlamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SKLabelNode+Tlamp.h"; path = "Utilities/SKLabelNode+Tlamp.h"; sourceTree = "<group>"; };
+		4692792318FC0AF000E541A5 /* SKLabelNode+Tlamp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SKLabelNode+Tlamp.m"; path = "Utilities/SKLabelNode+Tlamp.m"; sourceTree = "<group>"; };
 		46B0C06D18F9D6E400FE7256 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = Particles/spark.png; sourceTree = "<group>"; };
 		46B60CAD18FA0A1300810F51 /* SKColor+Tlamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SKColor+Tlamp.h"; path = "Utilities/SKColor+Tlamp.h"; sourceTree = "<group>"; };
 		46B60CAE18FA0A1300810F51 /* SKColor+Tlamp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SKColor+Tlamp.m"; path = "Utilities/SKColor+Tlamp.m"; sourceTree = "<group>"; };
@@ -148,6 +151,8 @@
 				46B60CAE18FA0A1300810F51 /* SKColor+Tlamp.m */,
 				4692791E18FBD10C00E541A5 /* SKAction+Tlamp.h */,
 				4692791F18FBD10C00E541A5 /* SKAction+Tlamp.m */,
+				4692792218FC0AF000E541A5 /* SKLabelNode+Tlamp.h */,
+				4692792318FC0AF000E541A5 /* SKLabelNode+Tlamp.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -369,6 +374,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				46B60CAF18FA0A1300810F51 /* SKColor+Tlamp.m in Sources */,
+				4692792418FC0AF000E541A5 /* SKLabelNode+Tlamp.m in Sources */,
 				46EAB3C918F9D042002AAEA8 /* main.m in Sources */,
 				46423D6D18FAF18100468D05 /* Helpers.m in Sources */,
 				46423D7C18FAF35600468D05 /* TLPMainScene.m in Sources */,

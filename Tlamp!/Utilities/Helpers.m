@@ -17,7 +17,7 @@ NSString* loadParticle(NSString *name)
 SKColor* color(int note)
 {
     NSArray *colors = @[
-        [SKColor orangeColor],
+        [SKColor tlp_orangeColor],
         [SKColor tlp_redColor],
         [SKColor tlp_yellowColor],
         [SKColor tlp_greenColor],

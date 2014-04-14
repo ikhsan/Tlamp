@@ -16,4 +16,8 @@
 + (SKAction *)fadesTo:(CGPoint)p scaleXBy:(CGFloat)xScale yBy:(CGFloat)yScale tempo:(CGFloat)tempo;
 + (SKAction *)fadesTo:(CGPoint)p scaleBy:(CGFloat)scale tempo:(CGFloat)tempo;
 
++ (SKAction *)fadeIn;
++ (SKAction *)fadeOut;
++ (SKAction *)flashWithDuration:(NSTimeInterval)duration;
+
 @end
