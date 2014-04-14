@@ -44,11 +44,14 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
 @property (nonatomic, getter = isPlayerPlayingOne) BOOL playerPlayingOne;
 @property (nonatomic, getter = isPlayerPlayingTwo) BOOL playerPlayingTwo;
-@property (strong, nonatomic) NSArray *pattern;
+@property (strong, nonatomic) NSArray *patterns;
+@property (nonatomic) NSUInteger activePattern;
 
 @end
 
 @implementation TLPMainScene
+
+#pragma mark - Initializer, getter and setter
 
 - (instancetype)initWithSize:(CGSize)size
 {
@@ -64,19 +67,8 @@ CGFloat bpmForTempo(NSInteger tempo) {
     for (int i=1; i <= 4; i++) [self noteHit:i];
     [self tick];
     
-//    self.pattern1 = @[
-//        @[@0, @0, @0, @1, @0, @0, @1, @0],
-//        @[@0, @0, @0, @0, @0, @0, @0, @0],
-//        @[@1, @1, @0, @0, @1, @0, @0, @0],
-//        @[@0, @0, @1, @0, @1, @0, @1, @1]
-//    ];
-
-    self.pattern = @[
-        @[@0, @0, @1, @0, @0, @0, @0, @0],
-        @[@0, @0, @0, @1, @1, @0, @1, @0],
-        @[@0, @0, @0, @0, @1, @0, @1, @1],
-        @[@1, @1, @0, @0, @0, @0, @0, @0]
-    ];
+    self.patterns = loadPatterns();
+    _activePattern = 1;
 
     return self;
 }
@@ -122,6 +114,14 @@ CGFloat bpmForTempo(NSInteger tempo) {
     {
         self.bpm = bpmForTempo(_tempo);
     }
+}
+
+- (void)setActivePattern:(NSUInteger)activePattern
+{
+    if (activePattern < 1 || activePattern > (self.patterns.count)) return;
+    
+    _activePattern = activePattern;
+    [self showMessage:[NSString stringWithFormat:@"pattern %lu", (unsigned long)_activePattern]];
 }
 
 #pragma mark - Titles
@@ -214,7 +214,11 @@ CGFloat bpmForTempo(NSInteger tempo) {
     // remove message if there's any
     NSString *name = !isSmall? LabelKey : SmallLabelKey;
     SKNode *existingLabel = [self childNodeWithName:name];
-    if (existingLabel) [existingLabel runAction:[SKAction fadeOutWithDuration:.2]];
+    if (existingLabel) {
+        [existingLabel runAction:[SKAction fadeOutWithDuration:.05] completion:^{
+            [existingLabel removeFromParent];
+        }];
+    }
     
     // print message
     SKLabelNode *labelNode = (!isSmall)? [SKLabelNode labelHUDWithMessage:message] : [SKLabelNode smallLabelWithMessage:message];
@@ -255,7 +259,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
 - (void)startCountdown
 {
     CGFloat beat = beatInterval(self.bpm);
-    NSString *m = [NSString stringWithFormat:@"pattern 1 (%.0fbpm)", self.bpm];
+    NSString *m = [NSString stringWithFormat:@"pattern %d (%.0fbpm)", (int)self.activePattern, self.bpm];
     [self showMessage:m small:NO duration:(beat * 3)];
     
     SKAction *wait = [SKAction waitForDuration:beat];
@@ -323,12 +327,23 @@ CGFloat bpmForTempo(NSInteger tempo) {
     self.tempo--;
 }
 
+- (void)switchRightPattern
+{
+    self.activePattern++;
+}
+
+- (void)switchLeftPattern
+{
+    self.activePattern--;
+}
+
 #pragma mark - Tickers
 
 - (void)tickNote
 {
+    NSArray *pat = self.patterns[self.activePattern-1];
     for (int i=0; i < 4; i++) {
-        if (![self.pattern[i][self.ticker - 1] boolValue]) continue;
+        if (![pat[i][self.ticker - 1] boolValue]) continue;
         [self noteTick:(i+1)];
     }
 }
@@ -416,13 +431,13 @@ CGFloat bpmForTempo(NSInteger tempo) {
             [self decrementTempo];
             break;
 
-//        // tempo slider (up arrow, down arrow)
-//        case 124:
-//            [self incrementPattern];
-//            break;
-//        case 123:
-//            [self decrementPattern];
-//            break;
+        // tempo slider (up arrow, down arrow)
+        case 124:
+            [self switchRightPattern];
+            break;
+        case 123:
+            [self switchLeftPattern];
+            break;
             
         default: break;
     }

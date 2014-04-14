@@ -14,6 +14,15 @@ NSString* loadParticle(NSString *name)
     return [[NSBundle mainBundle] pathForResource:name ofType:@"sks"];
 }
 
+NSArray* loadPatterns()
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"pattern" ofType:@"json"];
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    NSArray *patterns = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    
+    return (patterns)? patterns : nil;
+}
+
 SKColor* color(int note)
 {
     NSArray *colors = @[

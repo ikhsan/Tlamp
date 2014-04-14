@@ -16,6 +16,8 @@
 
 @end
 
+
+
 @implementation TLPAppDelegate
 
 @synthesize window = _window;
@@ -26,10 +28,7 @@
     
     /* Pick a size for the scene */
     SKScene *scene = [TLPMainScene sceneWithSize:CGSizeMake(1280, 800)];
-
-    /* Set the scale mode to scale to fit the window */
     scene.scaleMode = SKSceneScaleModeAspectFit;
-
     [self.skView presentScene:scene];
 
     self.skView.showsFPS = YES;

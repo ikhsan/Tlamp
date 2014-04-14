@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4604600218F9D79F00D2AF79 /* HitParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4604600018F9D79F00D2AF79 /* HitParticle.sks */; };
 		4604600318F9D79F00D2AF79 /* bokeh.png in Resources */ = {isa = PBXBuildFile; fileRef = 4604600118F9D79F00D2AF79 /* bokeh.png */; };
+		4628D57B18FCA4BA0015A442 /* pattern.json in Resources */ = {isa = PBXBuildFile; fileRef = 4628D57A18FCA4BA0015A442 /* pattern.json */; };
 		46423D6B18FAE05D00468D05 /* hit.png in Resources */ = {isa = PBXBuildFile; fileRef = 46423D6A18FAE05D00468D05 /* hit.png */; };
 		46423D6D18FAF18100468D05 /* Helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 46423D6C18FAF18100468D05 /* Helpers.m */; };
 		46423D7A18FAF35600468D05 /* TLPNote.m in Sources */ = {isa = PBXBuildFile; fileRef = 46423D7418FAF35600468D05 /* TLPNote.m */; };
@@ -54,6 +55,7 @@
 /* Begin PBXFileReference section */
 		4604600018F9D79F00D2AF79 /* HitParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = HitParticle.sks; path = Particles/HitParticle.sks; sourceTree = "<group>"; };
 		4604600118F9D79F00D2AF79 /* bokeh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bokeh.png; path = Particles/bokeh.png; sourceTree = "<group>"; };
+		4628D57A18FCA4BA0015A442 /* pattern.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = pattern.json; sourceTree = "<group>"; };
 		46423D6A18FAE05D00468D05 /* hit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = hit.png; path = Particles/hit.png; sourceTree = "<group>"; };
 		46423D6C18FAF18100468D05 /* Helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Helpers.m; path = Utilities/Helpers.m; sourceTree = "<group>"; };
 		46423D7318FAF35600468D05 /* TLPNote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPNote.h; sourceTree = "<group>"; };
@@ -246,6 +248,7 @@
 			children = (
 				46EAB40A18F9D509002AAEA8 /* Particles */,
 				46EAB3FF18F9D116002AAEA8 /* Audios */,
+				4628D57A18FCA4BA0015A442 /* pattern.json */,
 				46EAB3D818F9D042002AAEA8 /* Images.xcassets */,
 				46EAB3C418F9D042002AAEA8 /* Tlamp!-Info.plist */,
 				46EAB3C518F9D042002AAEA8 /* InfoPlist.strings */,
@@ -379,6 +382,7 @@
 				46B0C06E18F9D6E400FE7256 /* spark.png in Resources */,
 				46423D6B18FAE05D00468D05 /* hit.png in Resources */,
 				46EAB3D918F9D042002AAEA8 /* Images.xcassets in Resources */,
+				4628D57B18FCA4BA0015A442 /* pattern.json in Resources */,
 				46EAB40618F9D116002AAEA8 /* talempong_pacik_02.wav in Resources */,
 				46EAB3C718F9D042002AAEA8 /* InfoPlist.strings in Resources */,
 				4604600318F9D79F00D2AF79 /* bokeh.png in Resources */,

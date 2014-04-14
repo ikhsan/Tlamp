@@ -9,6 +9,7 @@
 @import SpriteKit;
 
 NSString* loadParticle(NSString *name);
+NSArray* loadPatterns();
 SKColor* color(int note);
 double beatInterval(double bpm);
 
