@@ -18,6 +18,9 @@
 		4692791D18FBCC8500E541A5 /* TLPGuideNote.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692791C18FBCC8500E541A5 /* TLPGuideNote.m */; };
 		4692792018FBD10C00E541A5 /* SKAction+Tlamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692791F18FBD10C00E541A5 /* SKAction+Tlamp.m */; };
 		4692792418FC0AF000E541A5 /* SKLabelNode+Tlamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692792318FC0AF000E541A5 /* SKLabelNode+Tlamp.m */; };
+		4692796A18FC3E5500E541A5 /* GameDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692796518FC3E5500E541A5 /* GameDevice.m */; };
+		4692796B18FC3E5500E541A5 /* hidapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 4692796618FC3E5500E541A5 /* hidapi.c */; };
+		4692796C18FC3E5500E541A5 /* IXNXboxDrumpad.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692796918FC3E5500E541A5 /* IXNXboxDrumpad.m */; };
 		46B0C06E18F9D6E400FE7256 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B0C06D18F9D6E400FE7256 /* spark.png */; };
 		46B60CAF18FA0A1300810F51 /* SKColor+Tlamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 46B60CAE18FA0A1300810F51 /* SKColor+Tlamp.m */; };
 		46EAB3BB18F9D042002AAEA8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46EAB3BA18F9D042002AAEA8 /* Cocoa.framework */; };
@@ -68,6 +71,12 @@
 		4692792118FBD12000E541A5 /* Helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Helpers.h; path = Utilities/Helpers.h; sourceTree = "<group>"; };
 		4692792218FC0AF000E541A5 /* SKLabelNode+Tlamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SKLabelNode+Tlamp.h"; path = "Utilities/SKLabelNode+Tlamp.h"; sourceTree = "<group>"; };
 		4692792318FC0AF000E541A5 /* SKLabelNode+Tlamp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SKLabelNode+Tlamp.m"; path = "Utilities/SKLabelNode+Tlamp.m"; sourceTree = "<group>"; };
+		4692796418FC3E5500E541A5 /* GameDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameDevice.h; sourceTree = "<group>"; };
+		4692796518FC3E5500E541A5 /* GameDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameDevice.m; sourceTree = "<group>"; };
+		4692796618FC3E5500E541A5 /* hidapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hidapi.c; sourceTree = "<group>"; };
+		4692796718FC3E5500E541A5 /* hidapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hidapi.h; sourceTree = "<group>"; };
+		4692796818FC3E5500E541A5 /* IXNXboxDrumpad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IXNXboxDrumpad.h; sourceTree = "<group>"; };
+		4692796918FC3E5500E541A5 /* IXNXboxDrumpad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IXNXboxDrumpad.m; sourceTree = "<group>"; };
 		46B0C06D18F9D6E400FE7256 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = Particles/spark.png; sourceTree = "<group>"; };
 		46B60CAD18FA0A1300810F51 /* SKColor+Tlamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SKColor+Tlamp.h"; path = "Utilities/SKColor+Tlamp.h"; sourceTree = "<group>"; };
 		46B60CAE18FA0A1300810F51 /* SKColor+Tlamp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SKColor+Tlamp.m"; path = "Utilities/SKColor+Tlamp.m"; sourceTree = "<group>"; };
@@ -142,6 +151,28 @@
 			path = Scenes;
 			sourceTree = "<group>";
 		};
+		4692792518FC3E3300E541A5 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				4692796318FC3E5500E541A5 /* IXNXboxDrumpad */,
+			);
+			path = Libraries;
+			sourceTree = "<group>";
+		};
+		4692796318FC3E5500E541A5 /* IXNXboxDrumpad */ = {
+			isa = PBXGroup;
+			children = (
+				4692796418FC3E5500E541A5 /* GameDevice.h */,
+				4692796518FC3E5500E541A5 /* GameDevice.m */,
+				4692796618FC3E5500E541A5 /* hidapi.c */,
+				4692796718FC3E5500E541A5 /* hidapi.h */,
+				4692796818FC3E5500E541A5 /* IXNXboxDrumpad.h */,
+				4692796918FC3E5500E541A5 /* IXNXboxDrumpad.m */,
+			);
+			name = IXNXboxDrumpad;
+			path = IXNXBOXDrumpad/IXNXboxDrumpad;
+			sourceTree = "<group>";
+		};
 		46B60CB018FA0A1B00810F51 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -201,6 +232,7 @@
 			isa = PBXGroup;
 			children = (
 				46EAB3CE18F9D042002AAEA8 /* MainMenu.xib */,
+				4692792518FC3E3300E541A5 /* Libraries */,
 				46B60CB018FA0A1B00810F51 /* Utilities */,
 				46423D7518FAF35600468D05 /* Scenes */,
 				46423D7218FAF35600468D05 /* Objects */,
@@ -325,6 +357,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 46EAB3AE18F9D042002AAEA8;
 			productRefGroup = 46EAB3B818F9D042002AAEA8 /* Products */;
@@ -373,10 +406,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4692796B18FC3E5500E541A5 /* hidapi.c in Sources */,
 				46B60CAF18FA0A1300810F51 /* SKColor+Tlamp.m in Sources */,
+				4692796C18FC3E5500E541A5 /* IXNXboxDrumpad.m in Sources */,
 				4692792418FC0AF000E541A5 /* SKLabelNode+Tlamp.m in Sources */,
 				46EAB3C918F9D042002AAEA8 /* main.m in Sources */,
 				46423D6D18FAF18100468D05 /* Helpers.m in Sources */,
+				4692796A18FC3E5500E541A5 /* GameDevice.m in Sources */,
 				46423D7C18FAF35600468D05 /* TLPMainScene.m in Sources */,
 				46423D7A18FAF35600468D05 /* TLPNote.m in Sources */,
 				4692791D18FBCC8500E541A5 /* TLPGuideNote.m in Sources */,

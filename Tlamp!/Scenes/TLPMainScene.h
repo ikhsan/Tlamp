@@ -10,4 +10,7 @@
 
 @interface TLPMainScene : SKScene
 
+- (void)noteHit:(int)n;
+- (void)tick;
+
 @end
