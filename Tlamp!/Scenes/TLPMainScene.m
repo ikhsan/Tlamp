@@ -23,14 +23,21 @@ NSString *const MetroAction = @"me.ikhsan.tlamp.metroAction";
 
 NSString *const TitleKey = @"me.ikhsan.tlamp.title";
 NSString *const SubtitleKey = @"me.ikhsan.tlamp.subtitle";
-
+NSString *const LabelKey = @"me.ikhsan.tlamp.label";
+NSString *const SmallLabelKey = @"me.ikhsan.tlamp.smallLabel";
 
 static CGFloat threshold = .5;
 
+CGFloat bpmForTempo(NSInteger tempo) {
+    double tempos[] = {60., 90., 120.};
+    return tempos[tempo-1];
+}
+
 @interface TLPMainScene ()
 
-@property NSInteger ticker;
-@property CGFloat bpm;
+@property (nonatomic) NSInteger ticker;
+@property (nonatomic) CGFloat bpm;
+@property (nonatomic) NSInteger tempo;
 
 @property (getter = isPlaying) BOOL playing;
 @property (getter = isGuidePlaying) BOOL guidePlaying;
@@ -47,14 +54,14 @@ static CGFloat threshold = .5;
 {
     if (!(self = [super initWithSize:size])) return nil;
 
+    _tempo = 1;
+    _bpm = bpmForTempo(_tempo);
+    _guidePlaying = YES;
+
     self.backgroundColor = [SKColor colorWithWhite:.05 alpha:1.0];
-    self.bpm = 120.0;
-    self.guidePlaying = YES;
     [self drawTheLines];
     
-    for (int i=1; i <= 4; i++) {
-        [self noteHit:i];
-    }
+    for (int i=1; i <= 4; i++) [self noteHit:i];
     [self tick];
     
 //    self.pattern1 = @[
@@ -90,6 +97,31 @@ static CGFloat threshold = .5;
     [self showMessage:_playerPlayingTwo?
      @"Please try play green & blue notes" :
      @"Computer will play green & blue notes for you"];
+}
+
+- (void)setBpm:(CGFloat)bpm
+{
+    _bpm = bpm;
+    
+    [self showSmallMessage:[NSString stringWithFormat:@"tempo changed to %.0f", _bpm]];
+}
+
+- (void)setTempo:(NSInteger)tempo
+{
+    if (tempo < 1 || tempo > 3) return;
+    
+    _tempo = tempo;
+    
+    if (self.isPlaying)
+    {
+        [self stopMetro];
+        self.bpm = bpmForTempo(_tempo);
+        [self startMetro];
+    }
+    else
+    {
+        self.bpm = bpmForTempo(_tempo);
+    }
 }
 
 #pragma mark - Titles
@@ -179,7 +211,14 @@ static CGFloat threshold = .5;
 
 - (void)showMessage:(NSString *)message small:(BOOL)isSmall duration:(NSTimeInterval)duration
 {
+    // remove message if there's any
+    NSString *name = !isSmall? LabelKey : SmallLabelKey;
+    SKNode *existingLabel = [self childNodeWithName:name];
+    if (existingLabel) [existingLabel runAction:[SKAction fadeOutWithDuration:.2]];
+    
+    // print message
     SKLabelNode *labelNode = (!isSmall)? [SKLabelNode labelHUDWithMessage:message] : [SKLabelNode smallLabelWithMessage:message];
+    labelNode.name = name;
     labelNode.alpha = 0.0;
     labelNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + (isSmall? -1 : 1) * 20.0);
     [self addChild:labelNode];
@@ -216,11 +255,12 @@ static CGFloat threshold = .5;
 - (void)startCountdown
 {
     CGFloat beat = beatInterval(self.bpm);
-    [self showMessage:@"pattern 1" small:NO duration:(beat * 3)];
+    NSString *m = [NSString stringWithFormat:@"pattern 1 (%.0fbpm)", self.bpm];
+    [self showMessage:m small:NO duration:(beat * 3)];
     
     SKAction *wait = [SKAction waitForDuration:beat];
     
-    __block int count = 3;
+    __block int count = 4;
     SKAction *countAction = [SKAction sequence:@[[SKAction runBlock:^{
         [self showMessage:[NSString stringWithFormat:@"%d", count] small:YES duration:beat];
         count--;
@@ -271,6 +311,16 @@ static CGFloat threshold = .5;
     
     // reset ticker
     self.ticker = 0;
+}
+
+- (void)incrementTempo
+{
+    self.tempo++;
+}
+
+- (void)decrementTempo
+{
+    self.tempo--;
 }
 
 #pragma mark - Tickers
@@ -336,6 +386,7 @@ static CGFloat threshold = .5;
         [self removeTitle];
     
     switch ([theEvent keyCode]) {
+        // note hits (1, 2, 3, 4)
         case 18: [self noteHit:1];
             break;
         case 19: [self noteHit:2];
@@ -344,16 +395,34 @@ static CGFloat threshold = .5;
             break;
         case 21: [self noteHit:4];
             break;
-            
+        
+        // metronome toggle (spacebar)
         case 49: [self startStopMetronome];
             break;
             
+        // note guide toggle (-, +)
         case 27:
             self.playerPlayingOne = !self.isPlayerPlayingOne;
             break;
         case 24:
             self.playerPlayingTwo = !self.isPlayerPlayingTwo;
             break;
+        
+        // tempo slider (up arrow, down arrow)
+        case 126:
+            [self incrementTempo];
+            break;
+        case 125:
+            [self decrementTempo];
+            break;
+
+//        // tempo slider (up arrow, down arrow)
+//        case 124:
+//            [self incrementPattern];
+//            break;
+//        case 123:
+//            [self decrementPattern];
+//            break;
             
         default: break;
     }
@@ -373,14 +442,11 @@ static CGFloat threshold = .5;
         else if ([node.name isEqualToString:NoteGuide])
         {
             TLPGuideNote *guideNote = (TLPGuideNote *)node;
-            if (fabs(y - guideNote.position.y) < threshold )
+            if ((fabs(y - guideNote.position.y) < threshold) && self.isGuidePlaying)
             {
-                if (self.isGuidePlaying)
-                {
-                    if ((((guideNote.note == 1) || (guideNote.note == 2)) && (!self.isPlayerPlayingOne)) ||
-                        (((guideNote.note == 3) || (guideNote.note == 4)) && (!self.isPlayerPlayingTwo)))
-                        [self noteHit:(int)guideNote.note];
-                }
+                if ((((guideNote.note == 1) || (guideNote.note == 2)) && (!self.isPlayerPlayingOne)) ||
+                    (((guideNote.note == 3) || (guideNote.note == 4)) && (!self.isPlayerPlayingTwo)))
+                    [self noteHit:(int)guideNote.note];
             }
         }
     }];
