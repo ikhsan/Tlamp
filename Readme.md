@@ -24,7 +24,7 @@ It was built using Apple's SpriteKit. Tested only in Mac OS X 10.9 and Xcode 5.1
 ##License
 
 Tlamp! is available under the MIT License.
-https://github.com/ixnixnixn/IXNTilePuzzle/blob/master/README.md
+
 See [`License`](https://github.com/ixnixnixn/) for more detail.
 
 ## Credits
