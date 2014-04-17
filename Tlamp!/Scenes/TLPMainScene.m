@@ -133,46 +133,8 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
 - (void)didMoveToView:(SKView *)view
 {
-    [self createAndShowTitle];
-}
-
-- (void)createAndShowTitle
-{
-    SKLabelNode *titleNode = (SKLabelNode *)[self childNodeWithName:TitleKey];
-    SKLabelNode *subtitleNode = (SKLabelNode *)[self childNodeWithName:SubtitleKey];
-    
-    if (!titleNode)
-    {
-        SKLabelNode *titleNode = [SKLabelNode labelHUDWithMessage:@"T L A M P !"];
-        titleNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + 20.);
-        titleNode.name = TitleKey;
-        [self addChild:titleNode];
-    }
-    
-    if (!subtitleNode)
-    {
-        SKLabelNode *subtitleNode = [SKLabelNode smallLabelWithMessage:@"hit anything to start..."];
-        subtitleNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) - 20.);
-        subtitleNode.name = SubtitleKey;
-        [self addChild:subtitleNode];
-    }
-    
-    [titleNode runAction:[SKAction fadeIn]];
-    [subtitleNode runAction:[SKAction fadeIn]];
-}
-
-- (void)removeTitle
-{
-    SKLabelNode *titleNode = (SKLabelNode *)[self childNodeWithName:TitleKey];
-    SKLabelNode *subtitleNode = (SKLabelNode *)[self childNodeWithName:SubtitleKey];
-
-    [titleNode runAction:[SKAction fadeOut] completion:^{
-        [titleNode removeFromParent];
-    }];
-    [subtitleNode runAction:[SKAction fadeOut] completion:^{
-        [subtitleNode removeFromParent];
-    }];
-
+    [self.messenger showMessage:@"T L A M P !" withDuration:0];
+    [self.messenger showSmallMessage:@"hit anything to start..." withDuration:0];
 }
 
 #pragma mark - Line drawers
@@ -201,39 +163,6 @@ CGFloat bpmForTempo(NSInteger tempo) {
         [self addChild:line];
     }
 }
-
-#pragma mark - Message actions
-
-//- (void)showMessage:(NSString *)message
-//{
-//    [self showMessage:message small:NO duration:1.];
-//}
-//
-//- (void)showSmallMessage:(NSString *)message
-//{
-//    [self showMessage:message small:YES duration:1.];
-//}
-//
-//- (void)showMessage:(NSString *)message small:(BOOL)isSmall duration:(NSTimeInterval)duration
-//{
-//    // remove message if there's any
-//    NSString *name = !isSmall? LabelKey : SmallLabelKey;
-//    SKNode *existingLabel = [self childNodeWithName:name];
-//    if (existingLabel) {
-//        [existingLabel runAction:[SKAction fadeOutWithDuration:.05] completion:^{
-//            [existingLabel removeFromParent];
-//        }];
-//    }
-//    
-//    // print message
-//    SKLabelNode *labelNode = (!isSmall)? [SKLabelNode labelHUDWithMessage:message] : [SKLabelNode smallLabelWithMessage:message];
-//    labelNode.name = name;
-//    labelNode.alpha = 0.0;
-//    labelNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + (isSmall? -1 : 1) * 20.0);
-//    [self addChild:labelNode];
-//    
-//    [labelNode runAction:[SKAction flashWithDuration:duration]];
-//}
 
 #pragma mark - Note hits actions
 
@@ -402,8 +331,8 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-    if ([self childNodeWithName:TitleKey])
-        [self removeTitle];
+    [self.messenger clearAllMessage];
+
     
     switch ([theEvent keyCode]) {
         // note hits (1, 2, 3, 4)

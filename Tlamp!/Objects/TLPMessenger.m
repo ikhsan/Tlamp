@@ -41,6 +41,23 @@ NSTimeInterval const FlashDuration = 1.0;
     
     // remove message if there is any
     NSString *name = !isSmall? LabelKey : SmallLabelKey;
+    [self clearMessageWithName:name];
+    
+    // print message
+    SKLabelNode *labelNode = (!isSmall)? [SKLabelNode labelHUDWithMessage:message] : [SKLabelNode smallLabelWithMessage:message];
+    labelNode.name = name;
+    labelNode.alpha = 0.0;
+    labelNode.position = CGPointMake(CGRectGetMidX(self.scene.frame), CGRectGetMidY(self.scene.frame) + (isSmall? -20 : 20));
+    [self.scene addChild:labelNode];
+    
+    if (duration != 0)
+        [labelNode runAction:[SKAction flashWithDuration:duration]];
+    else
+        [labelNode runAction:[SKAction fadeInWithDuration:duration]];
+}
+
+- (void)clearMessageWithName:(NSString *)name
+{
     SKNode *existingLabel = [self.scene childNodeWithName:name];
     if (existingLabel)
     {
@@ -48,15 +65,6 @@ NSTimeInterval const FlashDuration = 1.0;
             [existingLabel removeFromParent];
         }];
     }
-    
-    // print message
-    SKLabelNode *labelNode = (!isSmall)? [SKLabelNode labelHUDWithMessage:message] : [SKLabelNode smallLabelWithMessage:message];
-    labelNode.name = name;
-    labelNode.alpha = 0.0;
-    labelNode.position = CGPointMake(CGRectGetMidX(self.scene.frame), CGRectGetMidY(self.scene.frame) + (isSmall? -1 : 1) * 20.0);
-    [self.scene addChild:labelNode];
-    
-    [labelNode runAction:[SKAction flashWithDuration:duration]];
 }
 
 #pragma mark - Public Method
@@ -79,6 +87,12 @@ NSTimeInterval const FlashDuration = 1.0;
 - (void)showSmallMessage:(NSString *)message withDuration:(NSTimeInterval)duration
 {
     [self showMessage:message small:YES duration:duration];
+}
+
+- (void)clearAllMessage
+{
+    [self clearMessageWithName:LabelKey];
+    [self clearMessageWithName:SmallLabelKey];
 }
 
 @end

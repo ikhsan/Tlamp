@@ -16,5 +16,6 @@
 - (void)showMessage:(NSString *)message withDuration:(NSTimeInterval)duration;
 - (void)showSmallMessage:(NSString *)message;
 - (void)showSmallMessage:(NSString *)message withDuration:(NSTimeInterval)duration;
+- (void)clearAllMessage;
 
 @end
