@@ -24,6 +24,7 @@
 		4692796C18FC3E5500E541A5 /* IXNXboxDrumpad.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692796918FC3E5500E541A5 /* IXNXboxDrumpad.m */; };
 		46B0C06E18F9D6E400FE7256 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 46B0C06D18F9D6E400FE7256 /* spark.png */; };
 		46B60CAF18FA0A1300810F51 /* SKColor+Tlamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 46B60CAE18FA0A1300810F51 /* SKColor+Tlamp.m */; };
+		46CD48E7190082C600ECF0B3 /* TLPMessenger.m in Sources */ = {isa = PBXBuildFile; fileRef = 46CD48E6190082C600ECF0B3 /* TLPMessenger.m */; };
 		46EAB3BB18F9D042002AAEA8 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46EAB3BA18F9D042002AAEA8 /* Cocoa.framework */; };
 		46EAB3BD18F9D042002AAEA8 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46EAB3BC18F9D042002AAEA8 /* SpriteKit.framework */; };
 		46EAB3C718F9D042002AAEA8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 46EAB3C518F9D042002AAEA8 /* InfoPlist.strings */; };
@@ -82,6 +83,8 @@
 		46B0C06D18F9D6E400FE7256 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = Particles/spark.png; sourceTree = "<group>"; };
 		46B60CAD18FA0A1300810F51 /* SKColor+Tlamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SKColor+Tlamp.h"; path = "Utilities/SKColor+Tlamp.h"; sourceTree = "<group>"; };
 		46B60CAE18FA0A1300810F51 /* SKColor+Tlamp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SKColor+Tlamp.m"; path = "Utilities/SKColor+Tlamp.m"; sourceTree = "<group>"; };
+		46CD48E5190082C600ECF0B3 /* TLPMessenger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPMessenger.h; sourceTree = "<group>"; };
+		46CD48E6190082C600ECF0B3 /* TLPMessenger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLPMessenger.m; sourceTree = "<group>"; };
 		46EAB3B718F9D042002AAEA8 /* Tlamp!.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tlamp!.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		46EAB3BA18F9D042002AAEA8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		46EAB3BC18F9D042002AAEA8 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
@@ -138,6 +141,8 @@
 				46423D7E18FAFEFF00468D05 /* TLPLine.m */,
 				4692791B18FBCC8500E541A5 /* TLPGuideNote.h */,
 				4692791C18FBCC8500E541A5 /* TLPGuideNote.m */,
+				46CD48E5190082C600ECF0B3 /* TLPMessenger.h */,
+				46CD48E6190082C600ECF0B3 /* TLPMessenger.m */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -418,6 +423,7 @@
 				46423D6D18FAF18100468D05 /* Helpers.m in Sources */,
 				4692796A18FC3E5500E541A5 /* GameDevice.m in Sources */,
 				46423D7C18FAF35600468D05 /* TLPMainScene.m in Sources */,
+				46CD48E7190082C600ECF0B3 /* TLPMessenger.m in Sources */,
 				46423D7A18FAF35600468D05 /* TLPNote.m in Sources */,
 				4692791D18FBCC8500E541A5 /* TLPGuideNote.m in Sources */,
 				46423D7B18FAF35600468D05 /* TLPAppDelegate.m in Sources */,

@@ -16,10 +16,10 @@ If learning and playing music is fun then why some traditional music is on the v
 - engaging people by its interactivity
 - ubiquitous
 
-So let's experiment with **Tlamp!**, a tool to engage audience to traditional music. [The video](http://youtu.be/VEmX-1_DQPA) is a good sample of what Talempong music sounds like.
+So let's experiment with **Tlamp!**, a tool to engage audience to traditional music. [This video](http://youtu.be/VEmX-1_DQPA) is a good sample of what Talempong music sounds like.
 
 ##Technologies
-It was built using Apple's SpriteKit. Tested only in Mac OS X 10.9 and Xcode 5.1. Using [IXNXBOXDrumPad](https://github.com/ixnixnixn/IXNXBOXDrumpad) for Xbox's drumpad integration.
+It was built using Apple's `SpriteKit`. Tested only in Mac OS X 10.9 and Xcode 5.1. It uses [`IXNXBOXDrumPad`](https://github.com/ixnixnixn/IXNXBOXDrumpad) for Xbox's drumpad integration.
 
 ##License
 

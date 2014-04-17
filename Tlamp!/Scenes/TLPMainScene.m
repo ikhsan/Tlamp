@@ -10,9 +10,11 @@
 #import "SKAction+Tlamp.h"
 #import "SKLabelNode+Tlamp.h"
 
+// objects
 #import "TLPNote.h"
 #import "TLPLine.h"
 #import "TLPGuideNote.h"
+#import "TLPMessenger.h"
 
 #import "TLPMainScene.h"
 
@@ -23,8 +25,6 @@ NSString *const MetroAction = @"me.ikhsan.tlamp.metroAction";
 
 NSString *const TitleKey = @"me.ikhsan.tlamp.title";
 NSString *const SubtitleKey = @"me.ikhsan.tlamp.subtitle";
-NSString *const LabelKey = @"me.ikhsan.tlamp.label";
-NSString *const SmallLabelKey = @"me.ikhsan.tlamp.smallLabel";
 
 static CGFloat threshold = .5;
 
@@ -46,6 +46,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
 @property (nonatomic, getter = isPlayerPlayingTwo) BOOL playerPlayingTwo;
 @property (strong, nonatomic) NSArray *patterns;
 @property (nonatomic) NSUInteger activePattern;
+@property (strong, nonatomic) TLPMessenger *messenger;
 
 @end
 
@@ -60,13 +61,17 @@ CGFloat bpmForTempo(NSInteger tempo) {
     _tempo = 1;
     _bpm = bpmForTempo(_tempo);
     _guidePlaying = YES;
-
+    self.messenger = [[TLPMessenger alloc] initWithScene:self];
+    
+    // draw background and lines
     self.backgroundColor = [SKColor colorWithWhite:.05 alpha:1.0];
     [self drawTheLines];
     
+    // flash notes
     for (int i=1; i <= 4; i++) [self noteHit:i];
     [self tick];
     
+    // load guide and backing patterns
     self.patterns = loadPatterns();
     _activePattern = 1;
 
@@ -77,7 +82,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
 {
     _playerPlayingOne = playerPlayingOne;
     
-    [self showMessage:_playerPlayingOne?
+    [self.messenger showMessage:_playerPlayingOne?
      @"Please try play red & yellow notes" :
      @"Computer will play red & yellow notes for you"];
 }
@@ -86,7 +91,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
 {
     _playerPlayingTwo = playerPlayingTwo;
     
-    [self showMessage:_playerPlayingTwo?
+    [self.messenger showMessage:_playerPlayingTwo?
      @"Please try play green & blue notes" :
      @"Computer will play green & blue notes for you"];
 }
@@ -95,7 +100,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
 {
     _bpm = bpm;
     
-    [self showSmallMessage:[NSString stringWithFormat:@"tempo changed to %.0f", _bpm]];
+    [self.messenger showSmallMessage:[NSString stringWithFormat:@"tempo changed to %.0f", _bpm]];
 }
 
 - (void)setTempo:(NSInteger)tempo
@@ -121,7 +126,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
     if (activePattern < 1 || activePattern > (self.patterns.count)) return;
     
     _activePattern = activePattern;
-    [self showMessage:[NSString stringWithFormat:@"pattern %lu", (unsigned long)_activePattern]];
+    [self.messenger showMessage:[NSString stringWithFormat:@"pattern %lu", (unsigned long)_activePattern]];
 }
 
 #pragma mark - Titles
@@ -199,36 +204,36 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
 #pragma mark - Message actions
 
-- (void)showMessage:(NSString *)message
-{
-    [self showMessage:message small:NO duration:1.];
-}
-
-- (void)showSmallMessage:(NSString *)message
-{
-    [self showMessage:message small:YES duration:1.];
-}
-
-- (void)showMessage:(NSString *)message small:(BOOL)isSmall duration:(NSTimeInterval)duration
-{
-    // remove message if there's any
-    NSString *name = !isSmall? LabelKey : SmallLabelKey;
-    SKNode *existingLabel = [self childNodeWithName:name];
-    if (existingLabel) {
-        [existingLabel runAction:[SKAction fadeOutWithDuration:.05] completion:^{
-            [existingLabel removeFromParent];
-        }];
-    }
-    
-    // print message
-    SKLabelNode *labelNode = (!isSmall)? [SKLabelNode labelHUDWithMessage:message] : [SKLabelNode smallLabelWithMessage:message];
-    labelNode.name = name;
-    labelNode.alpha = 0.0;
-    labelNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + (isSmall? -1 : 1) * 20.0);
-    [self addChild:labelNode];
-    
-    [labelNode runAction:[SKAction flashWithDuration:duration]];
-}
+//- (void)showMessage:(NSString *)message
+//{
+//    [self showMessage:message small:NO duration:1.];
+//}
+//
+//- (void)showSmallMessage:(NSString *)message
+//{
+//    [self showMessage:message small:YES duration:1.];
+//}
+//
+//- (void)showMessage:(NSString *)message small:(BOOL)isSmall duration:(NSTimeInterval)duration
+//{
+//    // remove message if there's any
+//    NSString *name = !isSmall? LabelKey : SmallLabelKey;
+//    SKNode *existingLabel = [self childNodeWithName:name];
+//    if (existingLabel) {
+//        [existingLabel runAction:[SKAction fadeOutWithDuration:.05] completion:^{
+//            [existingLabel removeFromParent];
+//        }];
+//    }
+//    
+//    // print message
+//    SKLabelNode *labelNode = (!isSmall)? [SKLabelNode labelHUDWithMessage:message] : [SKLabelNode smallLabelWithMessage:message];
+//    labelNode.name = name;
+//    labelNode.alpha = 0.0;
+//    labelNode.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame) + (isSmall? -1 : 1) * 20.0);
+//    [self addChild:labelNode];
+//    
+//    [labelNode runAction:[SKAction flashWithDuration:duration]];
+//}
 
 #pragma mark - Note hits actions
 
@@ -260,13 +265,13 @@ CGFloat bpmForTempo(NSInteger tempo) {
 {
     CGFloat beat = beatInterval(self.bpm);
     NSString *m = [NSString stringWithFormat:@"pattern %d (%.0fbpm)", (int)self.activePattern, self.bpm];
-    [self showMessage:m small:NO duration:(beat * 3)];
+    [self.messenger showMessage:m withDuration:(beat * 3)];
     
     SKAction *wait = [SKAction waitForDuration:beat];
     
     __block int count = 4;
     SKAction *countAction = [SKAction sequence:@[[SKAction runBlock:^{
-        [self showMessage:[NSString stringWithFormat:@"%d", count] small:YES duration:beat];
+        [self.messenger showSmallMessage:[NSString stringWithFormat:@"%d", count] withDuration:beat];
         count--;
     }], wait]];
     [self runAction:[SKAction repeatAction:countAction count:count]];
