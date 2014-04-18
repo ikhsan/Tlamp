@@ -10,6 +10,7 @@
 
 NSString* loadParticle(NSString *name);
 NSArray* loadPatterns();
+NSArray* loadGrooves();
 SKColor* color(int note);
 double beatInterval(double bpm);
 

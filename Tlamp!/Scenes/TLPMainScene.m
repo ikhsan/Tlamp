@@ -6,11 +6,14 @@
 //  Copyright (c) 2014 Ikhsan Assaat. All rights reserved.
 //
 
+@import Carbon;
+
 #import "SKColor+Tlamp.h"
 #import "SKAction+Tlamp.h"
 #import "SKLabelNode+Tlamp.h"
 
 // objects
+#import "TLPSFX.h"
 #import "TLPNote.h"
 #import "TLPLine.h"
 #import "TLPGuideNote.h"
@@ -23,9 +26,6 @@ NSString *const BaseLine = @"me.ikhsan.tlamp.baseLine";
 NSString *const NoteGuideLine = @"me.ikhsan.tlamp.noteGuideLine";
 NSString *const MetroAction = @"me.ikhsan.tlamp.metroAction";
 
-NSString *const TitleKey = @"me.ikhsan.tlamp.title";
-NSString *const SubtitleKey = @"me.ikhsan.tlamp.subtitle";
-
 static CGFloat threshold = .5;
 
 CGFloat bpmForTempo(NSInteger tempo) {
@@ -33,7 +33,9 @@ CGFloat bpmForTempo(NSInteger tempo) {
     return tempos[tempo-1];
 }
 
-@interface TLPMainScene ()
+@interface TLPMainScene () {
+    BOOL _isTitleVisible;
+}
 
 @property (nonatomic) NSInteger ticker;
 @property (nonatomic) CGFloat bpm;
@@ -44,9 +46,12 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
 @property (nonatomic, getter = isPlayerPlayingOne) BOOL playerPlayingOne;
 @property (nonatomic, getter = isPlayerPlayingTwo) BOOL playerPlayingTwo;
+@property (strong, nonatomic) TLPMessenger *messenger;
+
 @property (strong, nonatomic) NSArray *patterns;
 @property (nonatomic) NSUInteger activePattern;
-@property (strong, nonatomic) TLPMessenger *messenger;
+@property (strong, nonatomic) NSArray *grooves;
+@property (nonatomic) NSUInteger activeGrooves;
 
 @end
 
@@ -61,6 +66,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
     _tempo = 1;
     _bpm = bpmForTempo(_tempo);
     _guidePlaying = YES;
+    
     self.messenger = [[TLPMessenger alloc] initWithScene:self];
     
     // draw background and lines
@@ -74,6 +80,8 @@ CGFloat bpmForTempo(NSInteger tempo) {
     // load guide and backing patterns
     self.patterns = loadPatterns();
     _activePattern = 1;
+    self.grooves = loadGrooves();
+    _activeGrooves = 0;
 
     return self;
 }
@@ -100,7 +108,8 @@ CGFloat bpmForTempo(NSInteger tempo) {
 {
     _bpm = bpm;
     
-    [self.messenger showSmallMessage:[NSString stringWithFormat:@"tempo changed to %.0f", _bpm]];
+    [self.messenger showMessage:[NSString stringWithFormat:@"%.0f bpm", _bpm]];
+    [self.messenger showSmallMessage:@"Changing tempo"];
 }
 
 - (void)setTempo:(NSInteger)tempo
@@ -126,7 +135,23 @@ CGFloat bpmForTempo(NSInteger tempo) {
     if (activePattern < 1 || activePattern > (self.patterns.count)) return;
     
     _activePattern = activePattern;
-    [self.messenger showMessage:[NSString stringWithFormat:@"pattern %lu", (unsigned long)_activePattern]];
+    
+    // tell user
+    [self.messenger showMessage:[NSString stringWithFormat:@"Pattern #%lu", (unsigned long)_activePattern]];
+    [self.messenger showSmallMessage:@"Changing playing pattern"];
+}
+
+- (void)setActiveGrooves:(NSUInteger)activeGrooves
+{
+    _activeGrooves = activeGrooves % (self.grooves.count + 1);
+    
+    NSString *m = (_activeGrooves == 0)?
+        @"Using only clicks" :
+        [NSString stringWithFormat:@"Rhythm #%lu", (unsigned long)_activeGrooves];
+    
+    // tell user
+    [self.messenger showMessage:m];
+    [self.messenger showSmallMessage:@"Changing backing rhythm"];
 }
 
 #pragma mark - Titles
@@ -135,6 +160,9 @@ CGFloat bpmForTempo(NSInteger tempo) {
 {
     [self.messenger showMessage:@"T L A M P !" withDuration:0];
     [self.messenger showSmallMessage:@"hit anything to start..." withDuration:0];
+    _isTitleVisible = YES;
+
+    [self startStopMetronome];
 }
 
 #pragma mark - Line drawers
@@ -271,6 +299,11 @@ CGFloat bpmForTempo(NSInteger tempo) {
     self.activePattern--;
 }
 
+- (void)incrementBacksound
+{
+    self.activeGrooves++;
+}
+
 #pragma mark - Tickers
 
 - (void)tickNote
@@ -278,14 +311,38 @@ CGFloat bpmForTempo(NSInteger tempo) {
     NSArray *pat = self.patterns[self.activePattern-1];
     for (int i=0; i < 4; i++) {
         if (![pat[i][self.ticker - 1] boolValue]) continue;
+        
         [self noteTick:(i+1)];
+    }
+}
+
+- (void)tickGroove
+{
+    if (self.activeGrooves == 0) return;
+    
+    CGFloat beat = beatInterval(self.bpm);
+    NSArray *groove = self.grooves[self.activeGrooves-1];
+    
+    for (int i = 0; i < 2; i++) {
+        NSInteger tick = self.ticker * 2;
+        
+        int gendangHit = (i == GendangHitOpen)? GendangHitOpen : GendangHitClosed;
+        if ([groove[i][tick - 2] boolValue]) {
+            [[TLPSFX player] playGendang:gendangHit];
+        }
+        if ([groove[i][tick - 1] boolValue]) {
+            SKAction *wait = [SKAction waitForDuration:(beat / 4.04)];
+            [self runAction:[SKAction sequence:@[wait, [SKAction runBlock:^{
+               [[TLPSFX player] playGendang:gendangHit];
+            }]]]];
+        }
     }
 }
 
 - (void)metronomeTick:(BOOL)even
 {
     CGFloat width = positionForStartOfLine(4, self.frame).x - positionForStartOfLine(1, self.frame).x;
-    SKColor *color = even? [SKColor tlp_orangeColor] : [[SKColor tlp_orangeColor] colorWithAlphaComponent:.2];
+    SKColor *color = even? [SKColor tlp_orangeColor] : [[SKColor tlp_orangeColor] colorWithAlphaComponent:.0];
     
     SKSpriteNode *line = [[SKSpriteNode alloc] initWithColor:color size:CGSizeMake(width, 6.)];
     line.name = even? MetroLine : @"";
@@ -304,6 +361,11 @@ CGFloat bpmForTempo(NSInteger tempo) {
     // run
     SKAction *metroWalk = [SKAction sequence:@[moveAndScale, fadeOut, removeMe]];
     [line runAction:metroWalk];
+
+    
+    // play metronome click or the groove
+    if (even) [self tick];
+    [self performSelector:@selector(tickGroove) withObject:nil afterDelay:0.1];
 }
 
 - (void)noteTick:(int)n
@@ -324,54 +386,55 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
 - (void)tick
 {
-    [self runAction:[SKAction playSoundFileNamed:@"talempong_pacik_05.wav" waitForCompletion:NO]];
+    [[TLPSFX player] playNote:5];
 }
 
 #pragma mark - Catching keyboard events
 
 - (void)keyDown:(NSEvent *)theEvent
-{
-    [self.messenger clearAllMessage];
-
-    
+{    
     switch ([theEvent keyCode]) {
         // note hits (1, 2, 3, 4)
-        case 18: [self noteHit:1];
+        case kVK_ANSI_1: [self noteHit:1];
             break;
-        case 19: [self noteHit:2];
+        case kVK_ANSI_2: [self noteHit:2];
             break;
-        case 20: [self noteHit:3];
+        case kVK_ANSI_3: [self noteHit:3];
             break;
-        case 21: [self noteHit:4];
+        case kVK_ANSI_4: [self noteHit:4];
             break;
         
         // metronome toggle (spacebar)
-        case 49: [self startStopMetronome];
+        case kVK_Space: [self startStopMetronome];
             break;
             
         // note guide toggle (-, +)
-        case 27:
+        case kVK_ANSI_Minus:
             self.playerPlayingOne = !self.isPlayerPlayingOne;
             break;
-        case 24:
+        case kVK_ANSI_Equal:
             self.playerPlayingTwo = !self.isPlayerPlayingTwo;
             break;
         
         // tempo slider (up arrow, down arrow)
-        case 126:
+        case kVK_UpArrow:
             [self incrementTempo];
             break;
-        case 125:
+        case kVK_DownArrow:
             [self decrementTempo];
             break;
 
-        // tempo slider (up arrow, down arrow)
-        case 124:
+        // pattern slider (right arrow, left arrow)
+        case kVK_RightArrow:
             [self switchRightPattern];
             break;
-        case 123:
+        case kVK_LeftArrow:
             [self switchLeftPattern];
             break;
+            
+        // groove vs metronome click
+        case kVK_ANSI_0:
+            [self incrementBacksound];
             
         default: break;
     }
@@ -383,12 +446,8 @@ CGFloat bpmForTempo(NSInteger tempo) {
 {
     CGFloat y = positionForBaseline(self.frame);
     [[self children] enumerateObjectsUsingBlock:^(SKNode *node, NSUInteger idx, BOOL *stop) {
-        if ([node.name isEqualToString:MetroLine])
-        {
-            if (fabs(y - node.position.y) < threshold )
-                [self tick];
-        }
-        else if ([node.name isEqualToString:NoteGuide])
+
+        if ([node.name isEqualToString:NoteGuide])
         {
             TLPGuideNote *guideNote = (TLPGuideNote *)node;
             if ((fabs(y - guideNote.position.y) < threshold) && self.isGuidePlaying)

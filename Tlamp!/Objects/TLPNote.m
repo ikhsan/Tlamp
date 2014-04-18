@@ -6,6 +6,9 @@
 //  Copyright (c) 2014 Ikhsan Assaat. All rights reserved.
 //
 
+#import "SKAction+Tlamp.h"
+#import "TLPSFX.h"
+
 #import "TLPNote.h"
 
 @interface TLPNote ()
@@ -43,9 +46,7 @@
 
 - (void)playNote
 {
-    NSString *noteName = [NSString stringWithFormat:@"talempong_pacik_0%d.wav", self.note];
-    SKAction *hitNote = [SKAction playSoundFileNamed:noteName waitForCompletion:NO];
-    [self runAction:hitNote];
+    [[TLPSFX player] playNote:self.note];
 }
 
 @end

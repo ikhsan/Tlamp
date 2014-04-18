@@ -75,4 +75,28 @@ CGFloat const fadeDuration = .2;
     return [SKAction sequence:@[fadeIn, wait, fadeOut, removeMe]];
 }
 
+//+ (SKAction *)playNote:(int)note
+//{
+//    NSString *noteName = [NSString stringWithFormat:@"talempong_pacik_0%d.wav", note];
+//    return [SKAction playSoundFileNamed:noteName waitForCompletion:NO];
+//}
+
+//+ (SKAction *)playGendang:(GendangHit)hit
+//{
+//    NSString *noteName;
+//    switch (hit) {
+//        case GendangHitClosed:
+//            noteName = @"gendang_closed.wav";
+//            break;
+//        case GendangHitOpen:
+//            noteName = @"gendang_open.wav";
+//            break;
+//            
+//        default:
+//            break;
+//    }
+//    
+//    return [SKAction playSoundFileNamed:noteName waitForCompletion:NO];
+//}
+
 @end

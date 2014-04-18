@@ -14,13 +14,23 @@ NSString* loadParticle(NSString *name)
     return [[NSBundle mainBundle] pathForResource:name ofType:@"sks"];
 }
 
-NSArray* loadPatterns()
+NSArray* loadJSON(NSString *filename)
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"pattern" ofType:@"json"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:filename ofType:@"json"];
     NSData *data = [NSData dataWithContentsOfFile:path];
     NSArray *patterns = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     
     return (patterns)? patterns : nil;
+}
+
+NSArray* loadPatterns()
+{
+    return loadJSON(@"talempong");
+}
+
+NSArray* loadGrooves()
+{
+    return loadJSON(@"gendang");
 }
 
 SKColor* color(int note)
