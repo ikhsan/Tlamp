@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Ikhsan Assaat. All rights reserved.
 //
 
-#import "SKAction+Tlamp.h"
 #import "TLPSFX.h"
 
 #import "TLPNote.h"

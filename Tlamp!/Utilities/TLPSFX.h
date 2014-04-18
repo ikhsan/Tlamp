@@ -15,8 +15,11 @@ typedef NS_ENUM(NSUInteger, GendangHit) {
 
 @interface TLPSFX : NSObject
 
+@property (nonatomic, assign) SKScene *scene;
+
 + (instancetype)player;
 - (void)playNote:(int)note;
 - (void)playGendang:(GendangHit)hit;
+- (void)playGendang:(GendangHit)hit withDelay:(NSTimeInterval)delay;
 
 @end

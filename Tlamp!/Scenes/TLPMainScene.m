@@ -68,6 +68,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
     _guidePlaying = YES;
     
     self.messenger = [[TLPMessenger alloc] initWithScene:self];
+    [[TLPSFX player] setScene:self];
     
     // draw background and lines
     self.backgroundColor = [SKColor colorWithWhite:.05 alpha:1.0];
@@ -161,8 +162,6 @@ CGFloat bpmForTempo(NSInteger tempo) {
     [self.messenger showMessage:@"T L A M P !" withDuration:0];
     [self.messenger showSmallMessage:@"hit anything to start..." withDuration:0];
     _isTitleVisible = YES;
-
-    [self startStopMetronome];
 }
 
 #pragma mark - Line drawers
@@ -318,23 +317,21 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
 - (void)tickGroove
 {
-    if (self.activeGrooves == 0) return;
+    if (self.activeGrooves == 0 || self.ticker == 0) return;
     
     CGFloat beat = beatInterval(self.bpm);
     NSArray *groove = self.grooves[self.activeGrooves-1];
     
     for (int i = 0; i < 2; i++) {
-        NSInteger tick = self.ticker * 2;
+        NSInteger tick = (self.ticker - 1) * 2;
         
         int gendangHit = (i == GendangHitOpen)? GendangHitOpen : GendangHitClosed;
-        if ([groove[i][tick - 2] boolValue]) {
+        
+        if ([groove[i][tick] boolValue]) {
             [[TLPSFX player] playGendang:gendangHit];
         }
-        if ([groove[i][tick - 1] boolValue]) {
-            SKAction *wait = [SKAction waitForDuration:(beat / 4.04)];
-            [self runAction:[SKAction sequence:@[wait, [SKAction runBlock:^{
-               [[TLPSFX player] playGendang:gendangHit];
-            }]]]];
+        if ([groove[i][tick + 1] boolValue]) {
+            [[TLPSFX player] playGendang:gendangHit withDelay:(beat / 4.)];
         }
     }
 }
@@ -392,7 +389,13 @@ CGFloat bpmForTempo(NSInteger tempo) {
 #pragma mark - Catching keyboard events
 
 - (void)keyDown:(NSEvent *)theEvent
-{    
+{
+    if (_isTitleVisible)
+    {
+        [self.messenger clearAllMessage];
+        _isTitleVisible = NO;
+    }
+    
     switch ([theEvent keyCode]) {
         // note hits (1, 2, 3, 4)
         case kVK_ANSI_1: [self noteHit:1];
