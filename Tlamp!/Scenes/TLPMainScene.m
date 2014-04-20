@@ -20,14 +20,13 @@
 #import "TLPGuideNote.h"
 #import "TLPMessenger.h"
 #import "TLPMetronome.h"
+#import "TLPIcon.h"
 
 #import "TLPMainScene.h"
 
 NSString *const MetroLine = @"me.ikhsan.tlamp.metroLine";
 NSString *const BaseLine = @"me.ikhsan.tlamp.baseLine";
 NSString *const NoteGuideLine = @"me.ikhsan.tlamp.noteGuideLine";
-NSString *const IconLeft = @"me.ikhsan.tlamp.iconLeft";
-NSString *const IconRight = @"me.ikhsan.tlamp.iconRight";
 
 static CGFloat Threshold = .5;
 static CGFloat PointDistance = 30.;
@@ -134,7 +133,7 @@ static CGFloat PointDistance = 30.;
     for (int i=1; i <= 5; i++) [self noteHit:i];
 }
 
-#pragma mark - Line drawers
+#pragma mark - Drawer methods
 
 - (void)drawTheLines
 {
@@ -153,45 +152,21 @@ static CGFloat PointDistance = 30.;
 
 - (void)drawIcons
 {
-    CGFloat d = 60.;
+    NSArray *xs = @[@(1.5 * 60.), @(CGRectGetWidth(self.frame) - (1.5 * 60.))];
+    NSArray *ys = @[@(CGRectGetHeight(self.frame) - 60.), @(CGRectGetHeight(self.frame) - 60.)];
+    NSArray *activePlayer = @[@(self.isPlayerPlayingOne), @(self.isPlayerPlayingTwo)];
     
-    NSString *leftImage = self.isPlayerPlayingOne? @"user.png" : @"computer.png";
-    SKSpriteNode *leftIcon = (SKSpriteNode *)[self childNodeWithName:IconLeft];
-    if (!leftIcon)
-    {
-        leftIcon = [SKSpriteNode spriteNodeWithImageNamed:leftImage];
-        leftIcon.name = IconLeft;
-        leftIcon.blendMode = SKBlendModeScreen;
-        leftIcon.colorBlendFactor = .8;
-        leftIcon.alpha = 0.;
-        leftIcon.color = [SKColor tlp_blueColor];
-        leftIcon.position = CGPointMake(1.5 * d, CGRectGetHeight(self.frame) - d);
-        [self addChild:leftIcon];
-        [leftIcon runAction:[SKAction fadeIn]];
-    }
-    else
-    {
-        leftIcon.texture = [SKTexture textureWithImageNamed:leftImage];
-    }
-    
-    NSString *rightImage = self.isPlayerPlayingTwo? @"user.png" : @"computer.png";
-    SKSpriteNode *rightIcon = (SKSpriteNode *)[self childNodeWithName:IconRight];
-    if (!rightIcon)
-    {
-        rightIcon = [SKSpriteNode spriteNodeWithImageNamed:leftImage];
-        rightIcon.name = IconRight;
-        rightIcon.blendMode = SKBlendModeScreen;
-        rightIcon.colorBlendFactor = .8;
-        leftIcon.alpha = 0.;
-        rightIcon.color = [SKColor tlp_blueColor];
-        rightIcon.position = CGPointMake(CGRectGetWidth(self.frame) - (1.5 * d), CGRectGetHeight(self.frame) - d);
-        [self addChild:rightIcon];
-        [rightIcon runAction:[SKAction fadeIn]];
-    }
-    else
-    {
-        rightIcon.texture = [SKTexture textureWithImageNamed:rightImage];
-    }
+    [@[IconLeft, IconRight] enumerateObjectsUsingBlock:^(NSString *name, NSUInteger index, BOOL *stop) {
+        TLPIcon *icon = (TLPIcon *)[self childNodeWithName:name];
+        if (!icon)
+        {
+            icon = [TLPIcon createIconWithName:name];
+            icon.position = CGPointMake([xs[index] doubleValue], [ys[index] doubleValue]);
+            [self addChild:icon];
+            [icon runAction:[SKAction fadeIn]];
+        }
+        icon.userActive = [activePlayer[index] boolValue];
+    }];
 }
 
 #pragma mark - Metronome delegate Methods

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		463CA5B91904083B009B8874 /* TLPIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 463CA5B81904083B009B8874 /* TLPIcon.m */; };
 		463ED85D1902CBB800CF1EF5 /* ValuatorParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 463ED85C1902CBB800CF1EF5 /* ValuatorParticle.sks */; };
 		463ED8601902CFBA00CF1EF5 /* TLPValuator.m in Sources */ = {isa = PBXBuildFile; fileRef = 463ED85F1902CFBA00CF1EF5 /* TLPValuator.m */; };
 		46423D6D18FAF18100468D05 /* Helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 46423D6C18FAF18100468D05 /* Helpers.m */; };
@@ -63,6 +64,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		463CA5B71904083B009B8874 /* TLPIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPIcon.h; sourceTree = "<group>"; };
+		463CA5B81904083B009B8874 /* TLPIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLPIcon.m; sourceTree = "<group>"; };
 		463ED85C1902CBB800CF1EF5 /* ValuatorParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ValuatorParticle.sks; sourceTree = "<group>"; };
 		463ED85E1902CFBA00CF1EF5 /* TLPValuator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPValuator.h; sourceTree = "<group>"; };
 		463ED85F1902CFBA00CF1EF5 /* TLPValuator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLPValuator.m; sourceTree = "<group>"; };
@@ -169,6 +172,8 @@
 				46CD48E6190082C600ECF0B3 /* TLPMessenger.m */,
 				468AAF13190354B30003B864 /* TLPMetronome.h */,
 				468AAF14190354B30003B864 /* TLPMetronome.m */,
+				463CA5B71904083B009B8874 /* TLPIcon.h */,
+				463CA5B81904083B009B8874 /* TLPIcon.m */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -482,6 +487,7 @@
 				46423D7C18FAF35600468D05 /* TLPMainScene.m in Sources */,
 				46CD48E7190082C600ECF0B3 /* TLPMessenger.m in Sources */,
 				46423D7A18FAF35600468D05 /* TLPNote.m in Sources */,
+				463CA5B91904083B009B8874 /* TLPIcon.m in Sources */,
 				4692791D18FBCC8500E541A5 /* TLPGuideNote.m in Sources */,
 				46423D7B18FAF35600468D05 /* TLPAppDelegate.m in Sources */,
 				4692792018FBD10C00E541A5 /* SKAction+Tlamp.m in Sources */,
