@@ -28,6 +28,7 @@
 @property (nonatomic, assign) SKScene<TLPMetronomeDelegate>* delegate;
 @property (nonatomic, readonly) CGFloat beat;
 
++ (instancetype)createMetronomeWithDelegate:(SKScene <TLPMetronomeDelegate>*)delegate;
 - (void)toggle;
 - (void)start;
 - (void)stop;

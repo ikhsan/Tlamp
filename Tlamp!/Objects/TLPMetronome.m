@@ -26,6 +26,14 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
 @implementation TLPMetronome
 
++ (instancetype)createMetronomeWithDelegate:(SKScene <TLPMetronomeDelegate>*)delegate
+{
+    TLPMetronome *m = [self new];
+    m.delegate = delegate;
+    
+    return m;
+}
+
 - (instancetype)init
 {
     if (!(self = [super init])) return nil;

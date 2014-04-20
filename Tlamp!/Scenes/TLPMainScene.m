@@ -32,18 +32,8 @@ NSString *const IconRight = @"me.ikhsan.tlamp.iconRight";
 static CGFloat Threshold = .5;
 static CGFloat PointDistance = 30.;
 
-//CGFloat bpmForTempo(NSInteger tempo) {
-//    double tempos[] = {60., 90., 120.};
-//    return tempos[tempo-1];
-//}
-
 @interface TLPMainScene () <TLPMetronomeDelegate>
 
-//@property (nonatomic) NSInteger ticker;
-//@property (nonatomic) CGFloat bpm;
-//@property (nonatomic) NSInteger tempo;
-
-//@property (nonatomic, getter = isPlaying) BOOL playing;
 @property (nonatomic, getter = isGuideNotePlaying) BOOL guideNotePlaying;
 @property (nonatomic, getter = isTitleVisible) BOOL titleVisible;
 
@@ -67,28 +57,22 @@ static CGFloat PointDistance = 30.;
 {
     if (!(self = [super initWithSize:size])) return nil;
 
-//    _tempo = 1;
-//    _bpm = bpmForTempo(_tempo);
+    // initial property values
     _guideNotePlaying = YES;
+    _activeGrooves = 0;
+    _activePattern = 1;
+    self.backgroundColor = [SKColor colorWithWhite:.05 alpha:1.0];
     
+    // setting delegate
     self.messenger = [[TLPMessenger alloc] initWithScene:self];
     [[TLPSFX player] setScene:self];
     
-    // draw background and lines
-    self.backgroundColor = [SKColor colorWithWhite:.05 alpha:1.0];
-    
-    // flash notes
-    for (int i=1; i <= 5; i++) [self noteHit:i];
-    
     // load guide and backing patterns
     self.patterns = loadPatterns();
-    _activePattern = 1;
     self.grooves = loadGrooves();
-    _activeGrooves = 0;
     
     // load metronome
-    TLPMetronome *m = [TLPMetronome new];
-    m.delegate = self;
+    TLPMetronome *m = [TLPMetronome createMetronomeWithDelegate:self];
     self.metronome = m;
 
     return self;
@@ -114,39 +98,12 @@ static CGFloat PointDistance = 30.;
     [self drawIcons];
 }
 
-//- (void)setBpm:(CGFloat)bpm
-//{
-//    _bpm = bpm;
-//    
-//    [self.messenger showMessage:[NSString stringWithFormat:@"%.0f bpm", _bpm]];
-//    [self.messenger showSmallMessage:@"Changing tempo"];
-//}
-//
-//- (void)setTempo:(NSInteger)tempo
-//{
-//    if (tempo < 1 || tempo > 3) return;
-//    
-//    _tempo = tempo;
-//    
-//    if (self.isPlaying)
-//    {
-//        [self stopMetro];
-//        self.bpm = bpmForTempo(_tempo);
-//        [self startMetro];
-//    }
-//    else
-//    {
-//        self.bpm = bpmForTempo(_tempo);
-//    }
-//}
-
 - (void)setActivePattern:(NSUInteger)activePattern
 {
     if (activePattern < 1 || activePattern > (self.patterns.count)) return;
     
     _activePattern = activePattern;
     
-    // tell user
     [self.messenger showMessage:[NSString stringWithFormat:@"Pattern #%lu", (unsigned long)_activePattern]];
     [self.messenger showSmallMessage:@"Changing playing pattern"];
 }
@@ -159,7 +116,6 @@ static CGFloat PointDistance = 30.;
         @"Using only clicks" :
         [NSString stringWithFormat:@"Rhythm #%lu", (unsigned long)_activeGrooves];
     
-    // tell user
     [self.messenger showMessage:m];
     [self.messenger showSmallMessage:@"Changing backing rhythm"];
 }
@@ -171,10 +127,74 @@ static CGFloat PointDistance = 30.;
     [self.messenger showMessage:@"T L A M P !" withDuration:0];
     [self.messenger showSmallMessage:@"hit anything to start..." withDuration:0];
     self.titleVisible = YES;
+    
     [self drawTheLines];
+    
+    // flash notes
+    for (int i=1; i <= 5; i++) [self noteHit:i];
 }
 
-#pragma mark - Delegate Methods
+#pragma mark - Line drawers
+
+- (void)drawTheLines
+{
+    // draw 4 notes / 0th for 'current position' line
+    for (int i=0; i < 5; i++) {
+        CGPoint p1 = (i != 0)? positionForStartOfLine(i, self.frame) : positionForNote(1, self.frame);
+        CGPoint p2 = (i != 0)? positionForEndOfLine(i, self.frame)   : positionForNote(4, self.frame);
+        
+        TLPLine *line = [TLPLine lineWithColor:color(i) from:p1 to:p2];
+        line.name = (i != 0)? NoteGuideLine : BaseLine;
+        [self addChild:line];
+    }
+}
+
+#pragma mark - Icon drawers
+
+- (void)drawIcons
+{
+    CGFloat d = 60.;
+    
+    NSString *leftImage = self.isPlayerPlayingOne? @"user.png" : @"computer.png";
+    SKSpriteNode *leftIcon = (SKSpriteNode *)[self childNodeWithName:IconLeft];
+    if (!leftIcon)
+    {
+        leftIcon = [SKSpriteNode spriteNodeWithImageNamed:leftImage];
+        leftIcon.name = IconLeft;
+        leftIcon.blendMode = SKBlendModeScreen;
+        leftIcon.colorBlendFactor = .8;
+        leftIcon.alpha = 0.;
+        leftIcon.color = [SKColor tlp_blueColor];
+        leftIcon.position = CGPointMake(1.5 * d, CGRectGetHeight(self.frame) - d);
+        [self addChild:leftIcon];
+        [leftIcon runAction:[SKAction fadeIn]];
+    }
+    else
+    {
+        leftIcon.texture = [SKTexture textureWithImageNamed:leftImage];
+    }
+    
+    NSString *rightImage = self.isPlayerPlayingTwo? @"user.png" : @"computer.png";
+    SKSpriteNode *rightIcon = (SKSpriteNode *)[self childNodeWithName:IconRight];
+    if (!rightIcon)
+    {
+        rightIcon = [SKSpriteNode spriteNodeWithImageNamed:leftImage];
+        rightIcon.name = IconRight;
+        rightIcon.blendMode = SKBlendModeScreen;
+        rightIcon.colorBlendFactor = .8;
+        leftIcon.alpha = 0.;
+        rightIcon.color = [SKColor tlp_blueColor];
+        rightIcon.position = CGPointMake(CGRectGetWidth(self.frame) - (1.5 * d), CGRectGetHeight(self.frame) - d);
+        [self addChild:rightIcon];
+        [rightIcon runAction:[SKAction fadeIn]];
+    }
+    else
+    {
+        rightIcon.texture = [SKTexture textureWithImageNamed:rightImage];
+    }
+}
+
+#pragma mark - Metronome delegate Methods
 
 - (void)metronomeDidChangeBpm:(TLPMetronome *)metronome
 {
@@ -220,61 +240,6 @@ static CGFloat PointDistance = 30.;
     }];
 }
 
-#pragma mark - Line drawers
-
-- (void)drawTheLines
-{
-    // draw 4 notes / 0th for 'current position' line
-    for (int i=0; i < 5; i++) {
-        CGPoint p1 = (i != 0)? positionForStartOfLine(i, self.frame) : positionForNote(1, self.frame);
-        CGPoint p2 = (i != 0)? positionForEndOfLine(i, self.frame)   : positionForNote(4, self.frame);
-        
-        TLPLine *line = [TLPLine lineWithColor:color(i) from:p1 to:p2];
-        line.name = (i != 0)? NoteGuideLine : BaseLine;
-        [self addChild:line];
-    }
-}
-
-#pragma mark - Icon drawers
-
-- (void)drawIcons
-{
-    CGFloat d = 60.;
-    
-    NSString *leftImage = self.isPlayerPlayingOne? @"user.png" : @"computer.png";
-    SKSpriteNode *leftIcon = (SKSpriteNode *)[self childNodeWithName:IconLeft];
-    if (!leftIcon)
-    {
-        leftIcon = [SKSpriteNode spriteNodeWithImageNamed:leftImage];
-        leftIcon.name = IconLeft;
-        leftIcon.blendMode = SKBlendModeScreen;
-        leftIcon.colorBlendFactor = .8;
-        leftIcon.color = [SKColor tlp_blueColor];
-        leftIcon.position = CGPointMake(1.5 * d, CGRectGetHeight(self.frame) - d);
-        [self addChild:leftIcon];
-    }
-    else
-    {
-        leftIcon.texture = [SKTexture textureWithImageNamed:leftImage];
-    }
-    
-    NSString *rightImage = self.isPlayerPlayingTwo? @"user.png" : @"computer.png";
-    SKSpriteNode *rightIcon = (SKSpriteNode *)[self childNodeWithName:IconRight];
-    if (!rightIcon)
-    {
-        rightIcon = [SKSpriteNode spriteNodeWithImageNamed:leftImage];
-        rightIcon.name = IconRight;
-        rightIcon.blendMode = SKBlendModeScreen;
-        rightIcon.colorBlendFactor = .8;
-        rightIcon.color = [SKColor tlp_blueColor];
-        rightIcon.position = CGPointMake(CGRectGetWidth(self.frame) - (1.5 * d), CGRectGetHeight(self.frame) - d);
-        [self addChild:rightIcon];
-    }
-    else
-    {
-        rightIcon.texture = [SKTexture textureWithImageNamed:rightImage];
-    }
-}
 
 #pragma mark - Note hits actions
 
@@ -291,7 +256,12 @@ static CGFloat PointDistance = 30.;
     [note playNote];
     
     // valuate note?
-    if (self.metronome.isPlaying) [self valuateNote:note];
+    if (self.metronome.isPlaying &&
+        ((self.isPlayerPlayingOne && (n == 1 || n == 2)) ||
+         (self.isPlayerPlayingTwo && (n == 3 || n == 4)) ))
+    {
+        [self valuateNote:note];
+    }
 }
 
 #pragma mark - Valuate notes
@@ -391,7 +361,6 @@ static CGFloat PointDistance = 30.;
     SKAction *metroWalk = [SKAction sequence:@[moveAndScale, fadeOut, removeMe]];
     [line runAction:metroWalk];
 
-    
     // play metronome click or the groove
     if (even) [self noteHit:5];
 }
