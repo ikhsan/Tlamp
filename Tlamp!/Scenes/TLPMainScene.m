@@ -19,37 +19,38 @@
 #import "TLPLine.h"
 #import "TLPGuideNote.h"
 #import "TLPMessenger.h"
+#import "TLPMetronome.h"
 
 #import "TLPMainScene.h"
 
 NSString *const MetroLine = @"me.ikhsan.tlamp.metroLine";
 NSString *const BaseLine = @"me.ikhsan.tlamp.baseLine";
 NSString *const NoteGuideLine = @"me.ikhsan.tlamp.noteGuideLine";
-NSString *const MetroAction = @"me.ikhsan.tlamp.metroAction";
 NSString *const IconLeft = @"me.ikhsan.tlamp.iconLeft";
 NSString *const IconRight = @"me.ikhsan.tlamp.iconRight";
 
 static CGFloat Threshold = .5;
 static CGFloat PointDistance = 30.;
 
-CGFloat bpmForTempo(NSInteger tempo) {
-    double tempos[] = {60., 90., 120.};
-    return tempos[tempo-1];
-}
+//CGFloat bpmForTempo(NSInteger tempo) {
+//    double tempos[] = {60., 90., 120.};
+//    return tempos[tempo-1];
+//}
 
-@interface TLPMainScene ()
+@interface TLPMainScene () <TLPMetronomeDelegate>
 
-@property (nonatomic) NSInteger ticker;
-@property (nonatomic) CGFloat bpm;
-@property (nonatomic) NSInteger tempo;
+//@property (nonatomic) NSInteger ticker;
+//@property (nonatomic) CGFloat bpm;
+//@property (nonatomic) NSInteger tempo;
 
-@property (nonatomic, getter = isPlaying) BOOL playing;
+//@property (nonatomic, getter = isPlaying) BOOL playing;
 @property (nonatomic, getter = isGuideNotePlaying) BOOL guideNotePlaying;
 @property (nonatomic, getter = isTitleVisible) BOOL titleVisible;
 
 @property (nonatomic, getter = isPlayerPlayingOne) BOOL playerPlayingOne;
 @property (nonatomic, getter = isPlayerPlayingTwo) BOOL playerPlayingTwo;
 @property (strong, nonatomic) TLPMessenger *messenger;
+@property (strong, nonatomic) TLPMetronome *metronome;
 
 @property (strong, nonatomic) NSArray *patterns;
 @property (nonatomic) NSUInteger activePattern;
@@ -66,8 +67,8 @@ CGFloat bpmForTempo(NSInteger tempo) {
 {
     if (!(self = [super initWithSize:size])) return nil;
 
-    _tempo = 1;
-    _bpm = bpmForTempo(_tempo);
+//    _tempo = 1;
+//    _bpm = bpmForTempo(_tempo);
     _guideNotePlaying = YES;
     
     self.messenger = [[TLPMessenger alloc] initWithScene:self];
@@ -77,14 +78,18 @@ CGFloat bpmForTempo(NSInteger tempo) {
     self.backgroundColor = [SKColor colorWithWhite:.05 alpha:1.0];
     
     // flash notes
-    for (int i=1; i <= 4; i++) [self noteHit:i];
-    [self tick];
+    for (int i=1; i <= 5; i++) [self noteHit:i];
     
     // load guide and backing patterns
     self.patterns = loadPatterns();
     _activePattern = 1;
     self.grooves = loadGrooves();
     _activeGrooves = 0;
+    
+    // load metronome
+    TLPMetronome *m = [TLPMetronome new];
+    m.delegate = self;
+    self.metronome = m;
 
     return self;
 }
@@ -109,31 +114,31 @@ CGFloat bpmForTempo(NSInteger tempo) {
     [self drawIcons];
 }
 
-- (void)setBpm:(CGFloat)bpm
-{
-    _bpm = bpm;
-    
-    [self.messenger showMessage:[NSString stringWithFormat:@"%.0f bpm", _bpm]];
-    [self.messenger showSmallMessage:@"Changing tempo"];
-}
-
-- (void)setTempo:(NSInteger)tempo
-{
-    if (tempo < 1 || tempo > 3) return;
-    
-    _tempo = tempo;
-    
-    if (self.isPlaying)
-    {
-        [self stopMetro];
-        self.bpm = bpmForTempo(_tempo);
-        [self startMetro];
-    }
-    else
-    {
-        self.bpm = bpmForTempo(_tempo);
-    }
-}
+//- (void)setBpm:(CGFloat)bpm
+//{
+//    _bpm = bpm;
+//    
+//    [self.messenger showMessage:[NSString stringWithFormat:@"%.0f bpm", _bpm]];
+//    [self.messenger showSmallMessage:@"Changing tempo"];
+//}
+//
+//- (void)setTempo:(NSInteger)tempo
+//{
+//    if (tempo < 1 || tempo > 3) return;
+//    
+//    _tempo = tempo;
+//    
+//    if (self.isPlaying)
+//    {
+//        [self stopMetro];
+//        self.bpm = bpmForTempo(_tempo);
+//        [self startMetro];
+//    }
+//    else
+//    {
+//        self.bpm = bpmForTempo(_tempo);
+//    }
+//}
 
 - (void)setActivePattern:(NSUInteger)activePattern
 {
@@ -159,7 +164,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
     [self.messenger showSmallMessage:@"Changing backing rhythm"];
 }
 
-#pragma mark - Titles
+#pragma mark - Scene's method after its ready
 
 - (void)didMoveToView:(SKView *)view
 {
@@ -169,26 +174,60 @@ CGFloat bpmForTempo(NSInteger tempo) {
     [self drawTheLines];
 }
 
+#pragma mark - Delegate Methods
+
+- (void)metronomeDidChangeBpm:(TLPMetronome *)metronome
+{
+    [self.messenger showMessage:[NSString stringWithFormat:@"%.0lu bpm", (unsigned long)metronome.bpm]];
+    [self.messenger showSmallMessage:@"Changing tempo"];
+}
+
+- (void)metronomeShouldStart:(TLPMetronome *)metronome
+{
+    __block int count = 4;
+    
+    SKAction *wait = [SKAction waitForDuration:metronome.beat];
+    
+    SKAction *tick = [SKAction runBlock:^{
+        if (count == 4) {
+            NSString *m = [NSString stringWithFormat:@"pattern %d (%.0fbpm)", (int)self.activePattern, metronome.bpm];
+            [self.messenger showMessage:m withDuration:(metronome.beat * 3)];
+        }
+        
+        [self.messenger showSmallMessage:[NSString stringWithFormat:@"%d", count] withDuration:metronome.beat];
+        count--;
+    }];
+    
+    [self runAction:[SKAction repeatAction:[SKAction sequence:@[tick, wait]] count:count]];
+}
+
+- (void)metronome:(TLPMetronome *)metronome tickerAtCount:(NSUInteger)count
+{
+    [self metronomeTick:(count % 2 == 1)];
+    [self tickNotesAtCount:count];
+    [self performSelector:@selector(tickGrooveAtCount:) withObject:@(count) afterDelay:0.1];
+}
+
+- (void)metronomeDidStop:(TLPMetronome *)metronome
+{
+    // remove existing note guides
+    NSArray *exception = @[BaseLine, NoteGuideLine, IconLeft, IconRight];
+    [[self children] enumerateObjectsUsingBlock:^(SKNode *node, NSUInteger idx, BOOL *stop) {
+        if ([exception containsObject:node.name]) return;
+        
+        NSArray *actions = @[[SKAction fadeAlphaTo:0. duration:.4], [SKAction removeFromParent]];
+        [node runAction:[SKAction sequence:actions]];
+    }];
+}
+
 #pragma mark - Line drawers
 
 - (void)drawTheLines
 {
     // draw 4 notes / 0th for 'current position' line
     for (int i=0; i < 5; i++) {
-        CGPoint p1, p2;
-        if (i != 0)
-        {
-            p1 = positionForStartOfLine(i, self.frame);
-            p2 = positionForEndOfLine(i, self.frame);
-        }
-        else
-        {
-            CGFloat d = 2.0;
-            p1 = positionForNote(1, self.frame);
-            p1.x += d;
-            p2 = positionForNote(4, self.frame);
-            p2.x -= d;
-        }
+        CGPoint p1 = (i != 0)? positionForStartOfLine(i, self.frame) : positionForNote(1, self.frame);
+        CGPoint p2 = (i != 0)? positionForEndOfLine(i, self.frame)   : positionForNote(4, self.frame);
         
         TLPLine *line = [TLPLine lineWithColor:color(i) from:p1 to:p2];
         line.name = (i != 0)? NoteGuideLine : BaseLine;
@@ -241,13 +280,18 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
 - (void)noteHit:(int)n
 {
+    if (n == 5)
+    {
+        [[TLPSFX player] playNote:5];
+        return;
+    }
+        
     TLPNote *note = [TLPNote makeNote:n withFrame:self.frame];
     [self addChild:note];
     [note playNote];
     
     // valuate note?
-    if (self.isPlaying)
-        [self valuateNote:note];
+    if (self.metronome.isPlaying) [self valuateNote:note];
 }
 
 #pragma mark - Valuate notes
@@ -277,95 +321,6 @@ CGFloat bpmForTempo(NSInteger tempo) {
     [self addChild:valuator];
 }
 
-#pragma mark - Metronome
-
-- (void)startStopMetronome
-{
-    if (!self.isPlaying)
-    {
-        [self startCountdown];
-        [self startMetro];
-    }
-    else
-    {
-        [self stopMetro];
-    }
-    
-    self.playing = !self.isPlaying;
-}
-
-- (void)startCountdown
-{
-    CGFloat beat = beatInterval(self.bpm);
-    NSString *m = [NSString stringWithFormat:@"pattern %d (%.0fbpm)", (int)self.activePattern, self.bpm];
-    [self.messenger showMessage:m withDuration:(beat * 3)];
-    
-    SKAction *wait = [SKAction waitForDuration:beat];
-    
-    __block int count = 4;
-    SKAction *countAction = [SKAction sequence:@[[SKAction runBlock:^{
-        [self.messenger showSmallMessage:[NSString stringWithFormat:@"%d", count] withDuration:beat];
-        count--;
-    }], wait]];
-    [self runAction:[SKAction repeatAction:countAction count:count]];
-    
-}
-
-- (void)startMetro
-{
-    SKAction *wait = [SKAction waitForDuration:beatInterval(self.bpm) / 2.];
-    
-    // tick every beat
-    SKAction *advanceTicker = [SKAction runBlock:^{
-        self.ticker++;
-        if (self.ticker >= 9) self.ticker = 1;
-    }];
-    
-    // tick metro & note
-    SKAction *tickerMetro = [SKAction sequence:@[[SKAction runBlock:^{
-        [self metronomeTick:(self.ticker % 2 == 1)];
-    }], wait]];
-    SKAction *tickerNote = [SKAction sequence:@[[SKAction runBlock:^{
-        [self tickNote];
-    }], wait]];
-    
-    // play metro & guide
-    SKAction *moveTicker = [SKAction sequence:@[advanceTicker, [SKAction group:@[tickerMetro, tickerNote]]]];
-    
-    SKAction *metro = [SKAction repeatActionForever:moveTicker];
-    [self runAction:metro withKey:MetroAction];
-}
-
-- (void)stopMetro
-{
-    // remove existing note guides
-    NSArray *exception = @[BaseLine, NoteGuideLine, IconLeft, IconRight];
-    [[self children] enumerateObjectsUsingBlock:^(SKNode *node, NSUInteger idx, BOOL *stop) {
-        if (![exception containsObject:node.name])
-        {
-            [node runAction:[SKAction fadeAlphaTo:0. duration:.4] completion:^{
-                [node removeFromParent];
-            }];
-        }
-    }];
-    
-    // remove existing actions
-    [self removeActionForKey:MetroAction];
-    
-    // reset ticker
-    self.ticker = 0;
-}
-
-- (void)incrementTempo
-{
-    self.tempo++;
-}
-
-- (void)decrementTempo
-{
-    self.tempo--;
-}
-
 - (void)switchRightPattern
 {
     self.activePattern++;
@@ -383,25 +338,24 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
 #pragma mark - Tickers
 
-- (void)tickNote
+- (void)tickNotesAtCount:(NSUInteger)count
 {
     NSArray *pat = self.patterns[self.activePattern-1];
     for (int i=0; i < 4; i++) {
-        if (![pat[i][self.ticker - 1] boolValue]) continue;
+        if (![pat[i][count - 1] boolValue]) continue;
         
         [self noteTick:(i+1)];
     }
 }
 
-- (void)tickGroove
+- (void)tickGrooveAtCount:(NSNumber *)count
 {
-    if (self.activeGrooves == 0 || self.ticker == 0) return;
+    if (self.activeGrooves == 0) return;
     
-    CGFloat beat = beatInterval(self.bpm);
     NSArray *groove = self.grooves[self.activeGrooves-1];
     
     for (int i = 0; i < 2; i++) {
-        NSInteger tick = (self.ticker - 1) * 2;
+        NSInteger tick = ([count integerValue] - 1) * 2;
         
         int gendangHit = (i == GendangHitOpen)? GendangHitOpen : GendangHitClosed;
         
@@ -409,7 +363,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
             [[TLPSFX player] playGendang:gendangHit];
         }
         if ([groove[i][tick + 1] boolValue]) {
-            [[TLPSFX player] playGendang:gendangHit withDelay:(beat / 4.)];
+            [[TLPSFX player] playGendang:gendangHit withDelay:(self.metronome.beat / 4.)];
         }
     }
 }
@@ -427,10 +381,10 @@ CGFloat bpmForTempo(NSInteger tempo) {
     // metro line's movement
     CGFloat s = (positionForNote(4, self.frame).x - positionForNote(1, self.frame).x) / (line.size.width);
     CGPoint p1 = CGPointMake(line.position.x, positionForBaseline(self.frame));
-    SKAction *moveAndScale = [SKAction moveTo:p1 scaleXBy:s yBy:1. tempo:self.bpm];
+    SKAction *moveAndScale = [SKAction moveTo:p1 scaleXBy:s yBy:1. tempo:self.metronome.bpm];
     
     CGPoint p2 = CGPointMake(CGRectGetMidX(self.frame), -10.0);
-    SKAction *fadeOut = [SKAction fadesTo:p2 scaleXBy:1.1 yBy:1. tempo:self.bpm];
+    SKAction *fadeOut = [SKAction fadesTo:p2 scaleXBy:1.1 yBy:1. tempo:self.metronome.bpm];
     SKAction *removeMe = [SKAction removeFromParent];
     
     // run
@@ -439,8 +393,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
     
     // play metronome click or the groove
-    if (even) [self tick];
-    [self performSelector:@selector(tickGroove) withObject:nil afterDelay:0.1];
+    if (even) [self noteHit:5];
 }
 
 - (void)noteTick:(int)n
@@ -450,18 +403,13 @@ CGFloat bpmForTempo(NSInteger tempo) {
     [self addChild:guideNote];
     
     // note's movement
-    SKAction *moveAndScale = [SKAction moveTo:positionForNote(n, self.frame) scaleBy:2. tempo:self.bpm];
-    SKAction *fadeOut = [SKAction fadesTo:positionForEndOfLine(n, self.frame) scaleBy:1.1 tempo:self.bpm];
+    SKAction *moveAndScale = [SKAction moveTo:positionForNote(n, self.frame) scaleBy:2. tempo:self.metronome.bpm];
+    SKAction *fadeOut = [SKAction fadesTo:positionForEndOfLine(n, self.frame) scaleBy:1.1 tempo:self.metronome.bpm];
     SKAction *removeMe = [SKAction removeFromParent];
     
     // run
     SKAction *noteWalk = [SKAction sequence:@[moveAndScale, fadeOut, removeMe]];
     [guideNote runAction:noteWalk];
-}
-
-- (void)tick
-{
-    [[TLPSFX player] playNote:5];
 }
 
 #pragma mark - Catching keyboard events
@@ -487,7 +435,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
             break;
         
         // metronome toggle (spacebar)
-        case kVK_Space: [self startStopMetronome];
+        case kVK_Space: [self.metronome toggle];
             break;
             
         // note guide toggle (-, +)
@@ -500,10 +448,10 @@ CGFloat bpmForTempo(NSInteger tempo) {
         
         // tempo slider (up arrow, down arrow)
         case kVK_UpArrow:
-            [self incrementTempo];
+            [self.metronome increment];
             break;
         case kVK_DownArrow:
-            [self decrementTempo];
+            [self.metronome decrement];
             break;
 
         // pattern slider (right arrow, left arrow)

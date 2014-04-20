@@ -18,6 +18,7 @@
 		466192021900A9350024965B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 466192011900A9350024965B /* AudioToolbox.framework */; };
 		468AAF0F1903494C0003B864 /* computer.png in Resources */ = {isa = PBXBuildFile; fileRef = 468AAF0D1903494C0003B864 /* computer.png */; };
 		468AAF1219034A380003B864 /* user.png in Resources */ = {isa = PBXBuildFile; fileRef = 468AAF1119034A380003B864 /* user.png */; };
+		468AAF15190354B30003B864 /* TLPMetronome.m in Sources */ = {isa = PBXBuildFile; fileRef = 468AAF14190354B30003B864 /* TLPMetronome.m */; };
 		4692791D18FBCC8500E541A5 /* TLPGuideNote.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692791C18FBCC8500E541A5 /* TLPGuideNote.m */; };
 		4692792018FBD10C00E541A5 /* SKAction+Tlamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692791F18FBD10C00E541A5 /* SKAction+Tlamp.m */; };
 		4692792418FC0AF000E541A5 /* SKLabelNode+Tlamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692792318FC0AF000E541A5 /* SKLabelNode+Tlamp.m */; };
@@ -79,6 +80,8 @@
 		466192011900A9350024965B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		468AAF0D1903494C0003B864 /* computer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = computer.png; sourceTree = "<group>"; };
 		468AAF1119034A380003B864 /* user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user.png; sourceTree = "<group>"; };
+		468AAF13190354B30003B864 /* TLPMetronome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPMetronome.h; sourceTree = "<group>"; };
+		468AAF14190354B30003B864 /* TLPMetronome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLPMetronome.m; sourceTree = "<group>"; };
 		4692791B18FBCC8500E541A5 /* TLPGuideNote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPGuideNote.h; sourceTree = "<group>"; };
 		4692791C18FBCC8500E541A5 /* TLPGuideNote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLPGuideNote.m; sourceTree = "<group>"; };
 		4692791E18FBD10C00E541A5 /* SKAction+Tlamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SKAction+Tlamp.h"; path = "Utilities/SKAction+Tlamp.h"; sourceTree = "<group>"; };
@@ -164,6 +167,8 @@
 				4692791C18FBCC8500E541A5 /* TLPGuideNote.m */,
 				46CD48E5190082C600ECF0B3 /* TLPMessenger.h */,
 				46CD48E6190082C600ECF0B3 /* TLPMessenger.m */,
+				468AAF13190354B30003B864 /* TLPMetronome.h */,
+				468AAF14190354B30003B864 /* TLPMetronome.m */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -473,6 +478,7 @@
 				463ED8601902CFBA00CF1EF5 /* TLPValuator.m in Sources */,
 				46423D6D18FAF18100468D05 /* Helpers.m in Sources */,
 				4692796A18FC3E5500E541A5 /* GameDevice.m in Sources */,
+				468AAF15190354B30003B864 /* TLPMetronome.m in Sources */,
 				46423D7C18FAF35600468D05 /* TLPMainScene.m in Sources */,
 				46CD48E7190082C600ECF0B3 /* TLPMessenger.m in Sources */,
 				46423D7A18FAF35600468D05 /* TLPNote.m in Sources */,

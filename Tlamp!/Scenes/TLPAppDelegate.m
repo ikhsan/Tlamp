@@ -74,7 +74,7 @@
             [scene noteHit:4];
             break;
         case KeyEventHitOrange:
-            [scene tick];
+            [scene noteHit:5];
             break;
             
         default:
