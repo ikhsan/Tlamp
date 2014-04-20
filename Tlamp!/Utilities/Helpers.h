@@ -8,15 +8,20 @@
 
 @import SpriteKit;
 
+// file loader
 NSString* loadParticle(NSString *name);
 NSArray* loadPatterns();
 NSArray* loadGrooves();
+
+// color picker
 SKColor* color(int note);
+
+// tempo
 double beatInterval(double bpm);
 
+// line positions
 CGPoint positionForStartOfLine(int line, CGRect frame);;
-CGFloat positionForBaseline(CGRect frame);
-CGPoint positionForNoteGivenY(int note, CGFloat y, CGRect frame);
-CGPoint positionForNote(int note, CGRect frame);
 CGPoint positionForEndOfLine(int line, CGRect frame);
-
+CGFloat positionForBaseline(CGRect frame);
+CGPoint positionForNote(int note, CGRect frame);
+CGPoint positionForValuator(int note, CGRect frame);

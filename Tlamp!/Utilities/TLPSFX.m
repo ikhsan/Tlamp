@@ -92,7 +92,10 @@ NSURL* URLForWav(NSString *filename)
 {
     if (!self.scene) return;
     
-    [self.scene runAction:[SKAction sequence:@[[SKAction waitForDuration:delay], ((hit == GendangHitOpen)? self.gendangOpen : self.gendangClosed)]]];
+    [self.scene runAction:[SKAction sequence:@[
+        [SKAction waitForDuration:delay],
+        ((hit == GendangHitOpen)? self.gendangOpen : self.gendangClosed)
+    ]]];
 }
 
 

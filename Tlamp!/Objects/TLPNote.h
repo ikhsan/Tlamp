@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Ikhsan Assaat. All rights reserved.
 //
 
-#import <SpriteKit/SpriteKit.h>
+@import SpriteKit;
 
 @interface TLPNote : SKSpriteNode
 
-@property (weak, nonatomic) SKEmitterNode *emitter;
+@property (nonatomic, readonly) int note;
 
 + (instancetype)makeNote:(int)note withFrame:(CGRect)frame;
 - (void)playNote;

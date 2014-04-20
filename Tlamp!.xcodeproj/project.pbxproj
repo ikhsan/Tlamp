@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		463ED85D1902CBB800CF1EF5 /* ValuatorParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 463ED85C1902CBB800CF1EF5 /* ValuatorParticle.sks */; };
+		463ED8601902CFBA00CF1EF5 /* TLPValuator.m in Sources */ = {isa = PBXBuildFile; fileRef = 463ED85F1902CFBA00CF1EF5 /* TLPValuator.m */; };
 		46423D6D18FAF18100468D05 /* Helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 46423D6C18FAF18100468D05 /* Helpers.m */; };
 		46423D7A18FAF35600468D05 /* TLPNote.m in Sources */ = {isa = PBXBuildFile; fileRef = 46423D7418FAF35600468D05 /* TLPNote.m */; };
 		46423D7B18FAF35600468D05 /* TLPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 46423D7718FAF35600468D05 /* TLPAppDelegate.m */; };
@@ -29,7 +31,6 @@
 		46CD490119008E8700ECF0B3 /* talempong_pacik_03.wav in Resources */ = {isa = PBXBuildFile; fileRef = 46CD48F219008E8700ECF0B3 /* talempong_pacik_03.wav */; };
 		46CD490219008E8700ECF0B3 /* talempong_pacik_04.wav in Resources */ = {isa = PBXBuildFile; fileRef = 46CD48F319008E8700ECF0B3 /* talempong_pacik_04.wav */; };
 		46CD490319008E8700ECF0B3 /* talempong_pacik_05.wav in Resources */ = {isa = PBXBuildFile; fileRef = 46CD48F419008E8700ECF0B3 /* talempong_pacik_05.wav */; };
-		46CD490419008E8700ECF0B3 /* bokeh.png in Resources */ = {isa = PBXBuildFile; fileRef = 46CD48F619008E8700ECF0B3 /* bokeh.png */; };
 		46CD490519008E8700ECF0B3 /* hit.png in Resources */ = {isa = PBXBuildFile; fileRef = 46CD48F719008E8700ECF0B3 /* hit.png */; };
 		46CD490619008E8700ECF0B3 /* HitParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 46CD48F819008E8700ECF0B3 /* HitParticle.sks */; };
 		46CD490719008E8700ECF0B3 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 46CD48F919008E8700ECF0B3 /* spark.png */; };
@@ -59,6 +60,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		463ED85C1902CBB800CF1EF5 /* ValuatorParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ValuatorParticle.sks; sourceTree = "<group>"; };
+		463ED85E1902CFBA00CF1EF5 /* TLPValuator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPValuator.h; sourceTree = "<group>"; };
+		463ED85F1902CFBA00CF1EF5 /* TLPValuator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLPValuator.m; sourceTree = "<group>"; };
 		46423D6C18FAF18100468D05 /* Helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Helpers.m; path = Utilities/Helpers.m; sourceTree = "<group>"; };
 		46423D7318FAF35600468D05 /* TLPNote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPNote.h; sourceTree = "<group>"; };
 		46423D7418FAF35600468D05 /* TLPNote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLPNote.m; sourceTree = "<group>"; };
@@ -95,7 +99,6 @@
 		46CD48F219008E8700ECF0B3 /* talempong_pacik_03.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = talempong_pacik_03.wav; sourceTree = "<group>"; };
 		46CD48F319008E8700ECF0B3 /* talempong_pacik_04.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = talempong_pacik_04.wav; sourceTree = "<group>"; };
 		46CD48F419008E8700ECF0B3 /* talempong_pacik_05.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = talempong_pacik_05.wav; sourceTree = "<group>"; };
-		46CD48F619008E8700ECF0B3 /* bokeh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bokeh.png; sourceTree = "<group>"; };
 		46CD48F719008E8700ECF0B3 /* hit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hit.png; sourceTree = "<group>"; };
 		46CD48F819008E8700ECF0B3 /* HitParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = HitParticle.sks; sourceTree = "<group>"; };
 		46CD48F919008E8700ECF0B3 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
@@ -149,6 +152,8 @@
 			children = (
 				46423D7318FAF35600468D05 /* TLPNote.h */,
 				46423D7418FAF35600468D05 /* TLPNote.m */,
+				463ED85E1902CFBA00CF1EF5 /* TLPValuator.h */,
+				463ED85F1902CFBA00CF1EF5 /* TLPValuator.m */,
 				46423D7D18FAFEFF00468D05 /* TLPLine.h */,
 				46423D7E18FAFEFF00468D05 /* TLPLine.m */,
 				4692791B18FBCC8500E541A5 /* TLPGuideNote.h */,
@@ -236,9 +241,9 @@
 		46CD48F519008E8700ECF0B3 /* Particles */ = {
 			isa = PBXGroup;
 			children = (
-				46CD48F619008E8700ECF0B3 /* bokeh.png */,
-				46CD48F719008E8700ECF0B3 /* hit.png */,
+				463ED85C1902CBB800CF1EF5 /* ValuatorParticle.sks */,
 				46CD48F819008E8700ECF0B3 /* HitParticle.sks */,
+				46CD48F719008E8700ECF0B3 /* hit.png */,
 				46CD48F919008E8700ECF0B3 /* spark.png */,
 			);
 			path = Particles;
@@ -297,7 +302,6 @@
 		46EAB3C218F9D042002AAEA8 /* Tlamp! */ = {
 			isa = PBXGroup;
 			children = (
-				46EAB3CE18F9D042002AAEA8 /* MainMenu.xib */,
 				4692792518FC3E3300E541A5 /* Libraries */,
 				46B60CB018FA0A1B00810F51 /* Utilities */,
 				46423D7518FAF35600468D05 /* Scenes */,
@@ -311,6 +315,7 @@
 			isa = PBXGroup;
 			children = (
 				46CD48EC19008E8700ECF0B3 /* Files */,
+				46EAB3CE18F9D042002AAEA8 /* MainMenu.xib */,
 				46EAB3D818F9D042002AAEA8 /* Images.xcassets */,
 				46EAB3C418F9D042002AAEA8 /* Tlamp!-Info.plist */,
 				46EAB3C518F9D042002AAEA8 /* InfoPlist.strings */,
@@ -417,12 +422,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				46EAB3D918F9D042002AAEA8 /* Images.xcassets in Resources */,
+				463ED85D1902CBB800CF1EF5 /* ValuatorParticle.sks in Resources */,
 				46CD490219008E8700ECF0B3 /* talempong_pacik_04.wav in Resources */,
 				46CD490519008E8700ECF0B3 /* hit.png in Resources */,
 				46CD490119008E8700ECF0B3 /* talempong_pacik_03.wav in Resources */,
 				46CD490019008E8700ECF0B3 /* talempong_pacik_02.wav in Resources */,
 				46EAB3C718F9D042002AAEA8 /* InfoPlist.strings in Resources */,
-				46CD490419008E8700ECF0B3 /* bokeh.png in Resources */,
 				46CD490919008E8700ECF0B3 /* talempong.json in Resources */,
 				46CD490319008E8700ECF0B3 /* talempong_pacik_05.wav in Resources */,
 				46CD490819008E8700ECF0B3 /* gendang.json in Resources */,
@@ -457,6 +462,7 @@
 				4692792418FC0AF000E541A5 /* SKLabelNode+Tlamp.m in Sources */,
 				46EAB3C918F9D042002AAEA8 /* main.m in Sources */,
 				466192001900A9220024965B /* TLPSFX.m in Sources */,
+				463ED8601902CFBA00CF1EF5 /* TLPValuator.m in Sources */,
 				46423D6D18FAF18100468D05 /* Helpers.m in Sources */,
 				4692796A18FC3E5500E541A5 /* GameDevice.m in Sources */,
 				46423D7C18FAF35600468D05 /* TLPMainScene.m in Sources */,

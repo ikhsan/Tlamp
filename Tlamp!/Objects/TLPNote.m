@@ -12,7 +12,8 @@
 
 @interface TLPNote ()
 
-@property int note;
+@property (nonatomic) int note;
+@property (weak, nonatomic) SKEmitterNode *emitter;
 
 @end
 
@@ -20,13 +21,10 @@
 
 + (instancetype)makeNote:(int)note withFrame:(CGRect)frame
 {
-    TLPNote *noteNode = [[TLPNote alloc] initWithNote:note];
-    noteNode.position = positionForNote(note, frame);
-    
-    return noteNode;
+    return [[self alloc] initWithNote:note withFrame:frame];
 }
 
-- (instancetype)initWithNote:(int)note
+- (instancetype)initWithNote:(int)note withFrame:(CGRect)frame
 {
     if (!(self = [super init])) return nil;
     
@@ -36,8 +34,10 @@
     emitter.particleColorSequence = [[SKKeyframeSequence alloc] initWithKeyframeValues:@[color(note)] times:@[@0]];
     emitter.particleColorBlendFactor = 1.0;
     [self addChild:emitter];
+    self.position = positionForNote(note, frame);
     
     self.emitter = emitter;
+    
     self.note = note;
     
     return self;
@@ -47,5 +47,6 @@
 {
     [[TLPSFX player] playNote:self.note];
 }
+
 
 @end

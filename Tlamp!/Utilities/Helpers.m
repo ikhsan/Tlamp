@@ -53,7 +53,7 @@ double beatInterval(double bpm) {
 CGPoint positionForStartOfLine(int line, CGRect frame)
 {
 //    return CGPointMake(CGRectGetMidX(frame), CGRectGetHeight(frame) * .9);
-    return CGPointMake((CGRectGetWidth(frame) * .2) * line, CGRectGetHeight(frame) - 4.0);
+    return CGPointMake((CGRectGetWidth(frame) * .2) * line, CGRectGetHeight(frame) + 10.0);
 }
 
 CGPoint positionForEndOfLine(int line, CGRect frame)
@@ -82,5 +82,12 @@ CGPoint positionForNote(int note, CGRect frame)
 {
     CGFloat y = positionForBaseline(frame);
     return positionForNoteGivenY(note, y, frame);
+}
+
+CGPoint positionForValuator(int note, CGRect frame)
+{
+    CGPoint p = positionForNoteGivenY(note, positionForBaseline(frame), frame);
+    p.y -= 80.0;
+    return p;
 }
 

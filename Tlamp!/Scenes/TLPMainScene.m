@@ -15,6 +15,7 @@
 // objects
 #import "TLPSFX.h"
 #import "TLPNote.h"
+#import "TLPValuator.h"
 #import "TLPLine.h"
 #import "TLPGuideNote.h"
 #import "TLPMessenger.h"
@@ -26,23 +27,23 @@ NSString *const BaseLine = @"me.ikhsan.tlamp.baseLine";
 NSString *const NoteGuideLine = @"me.ikhsan.tlamp.noteGuideLine";
 NSString *const MetroAction = @"me.ikhsan.tlamp.metroAction";
 
-static CGFloat threshold = .5;
+static CGFloat Threshold = .5;
+static CGFloat PointDistance = 20.;
 
 CGFloat bpmForTempo(NSInteger tempo) {
     double tempos[] = {60., 90., 120.};
     return tempos[tempo-1];
 }
 
-@interface TLPMainScene () {
-    BOOL _isTitleVisible;
-}
+@interface TLPMainScene ()
 
 @property (nonatomic) NSInteger ticker;
 @property (nonatomic) CGFloat bpm;
 @property (nonatomic) NSInteger tempo;
 
-@property (getter = isPlaying) BOOL playing;
-@property (getter = isGuidePlaying) BOOL guidePlaying;
+@property (nonatomic, getter = isPlaying) BOOL playing;
+@property (nonatomic, getter = isGuideNotePlaying) BOOL guideNotePlaying;
+@property (nonatomic, getter = isTitleVisible) BOOL titleVisible;
 
 @property (nonatomic, getter = isPlayerPlayingOne) BOOL playerPlayingOne;
 @property (nonatomic, getter = isPlayerPlayingTwo) BOOL playerPlayingTwo;
@@ -65,7 +66,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
     _tempo = 1;
     _bpm = bpmForTempo(_tempo);
-    _guidePlaying = YES;
+    _guideNotePlaying = YES;
     
     self.messenger = [[TLPMessenger alloc] initWithScene:self];
     [[TLPSFX player] setScene:self];
@@ -161,7 +162,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
 {
     [self.messenger showMessage:@"T L A M P !" withDuration:0];
     [self.messenger showSmallMessage:@"hit anything to start..." withDuration:0];
-    _isTitleVisible = YES;
+    self.titleVisible = YES;
 }
 
 #pragma mark - Line drawers
@@ -198,6 +199,37 @@ CGFloat bpmForTempo(NSInteger tempo) {
     TLPNote *note = [TLPNote makeNote:n withFrame:self.frame];
     [self addChild:note];
     [note playNote];
+    
+    // valuate note?
+    if (self.isPlaying)
+        [self valuateNote:note];
+}
+
+#pragma mark - Valuate notes
+
+- (void)valuateNote:(TLPNote *)valuatedNote
+{
+   __block CGFloat mark = 0.0;
+    
+    // find all guide notes
+    [[self.scene children] enumerateObjectsUsingBlock:^(TLPGuideNote *guideNote, NSUInteger idx, BOOL *stop) {
+        // find corresponding notes
+        if ([guideNote.name isEqualToString:NoteGuide] && (valuatedNote.note == guideNote.note))
+        {
+            CGFloat dx = guideNote.position.x - valuatedNote.position.x;
+            CGFloat dy = guideNote.position.y - valuatedNote.position.y;
+            CGFloat distance = sqrt((dx * dx) + (dy * dy));
+            if (distance < PointDistance)
+            {
+                CGFloat tempMark = 1. - (distance / PointDistance);
+                mark = (tempMark > mark)? tempMark : mark;
+            }
+        }
+    }];
+    
+    TLPValuator *valuator = [TLPValuator makeValuatorWithMark:mark];
+    valuator.position = positionForValuator(valuatedNote.note, self.frame);
+    [self addChild:valuator];
 }
 
 #pragma mark - Metronome
@@ -390,10 +422,10 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-    if (_isTitleVisible)
+    if (self.isTitleVisible)
     {
         [self.messenger clearAllMessage];
-        _isTitleVisible = NO;
+        self.titleVisible = NO;
     }
     
     switch ([theEvent keyCode]) {
@@ -447,13 +479,15 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
 - (void)update:(NSTimeInterval)currentTime
 {
-    CGFloat y = positionForBaseline(self.frame);
     [[self children] enumerateObjectsUsingBlock:^(SKNode *node, NSUInteger idx, BOOL *stop) {
 
         if ([node.name isEqualToString:NoteGuide])
         {
+            CGFloat y = positionForBaseline(self.frame);
             TLPGuideNote *guideNote = (TLPGuideNote *)node;
-            if ((fabs(y - guideNote.position.y) < threshold) && self.isGuidePlaying)
+            
+            // should guide note be played?
+            if (self.isGuideNotePlaying && (fabs(y - guideNote.position.y) < Threshold))
             {
                 if ((((guideNote.note == 1) || (guideNote.note == 2)) && (!self.isPlayerPlayingOne)) ||
                     (((guideNote.note == 3) || (guideNote.note == 4)) && (!self.isPlayerPlayingTwo)))
