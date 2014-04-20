@@ -26,9 +26,11 @@ NSString *const MetroLine = @"me.ikhsan.tlamp.metroLine";
 NSString *const BaseLine = @"me.ikhsan.tlamp.baseLine";
 NSString *const NoteGuideLine = @"me.ikhsan.tlamp.noteGuideLine";
 NSString *const MetroAction = @"me.ikhsan.tlamp.metroAction";
+NSString *const IconLeft = @"me.ikhsan.tlamp.iconLeft";
+NSString *const IconRight = @"me.ikhsan.tlamp.iconRight";
 
 static CGFloat Threshold = .5;
-static CGFloat PointDistance = 20.;
+static CGFloat PointDistance = 30.;
 
 CGFloat bpmForTempo(NSInteger tempo) {
     double tempos[] = {60., 90., 120.};
@@ -73,7 +75,6 @@ CGFloat bpmForTempo(NSInteger tempo) {
     
     // draw background and lines
     self.backgroundColor = [SKColor colorWithWhite:.05 alpha:1.0];
-    [self drawTheLines];
     
     // flash notes
     for (int i=1; i <= 4; i++) [self noteHit:i];
@@ -95,6 +96,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
     [self.messenger showMessage:_playerPlayingOne?
      @"Please try play red & yellow notes" :
      @"Computer will play red & yellow notes for you"];
+    [self drawIcons];
 }
 
 - (void)setPlayerPlayingTwo:(BOOL)playerPlayingTwo
@@ -104,6 +106,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
     [self.messenger showMessage:_playerPlayingTwo?
      @"Please try play green & blue notes" :
      @"Computer will play green & blue notes for you"];
+    [self drawIcons];
 }
 
 - (void)setBpm:(CGFloat)bpm
@@ -163,6 +166,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
     [self.messenger showMessage:@"T L A M P !" withDuration:0];
     [self.messenger showSmallMessage:@"hit anything to start..." withDuration:0];
     self.titleVisible = YES;
+    [self drawTheLines];
 }
 
 #pragma mark - Line drawers
@@ -189,6 +193,47 @@ CGFloat bpmForTempo(NSInteger tempo) {
         TLPLine *line = [TLPLine lineWithColor:color(i) from:p1 to:p2];
         line.name = (i != 0)? NoteGuideLine : BaseLine;
         [self addChild:line];
+    }
+}
+
+#pragma mark - Icon drawers
+
+- (void)drawIcons
+{
+    CGFloat d = 60.;
+    
+    NSString *leftImage = self.isPlayerPlayingOne? @"user.png" : @"computer.png";
+    SKSpriteNode *leftIcon = (SKSpriteNode *)[self childNodeWithName:IconLeft];
+    if (!leftIcon)
+    {
+        leftIcon = [SKSpriteNode spriteNodeWithImageNamed:leftImage];
+        leftIcon.name = IconLeft;
+        leftIcon.blendMode = SKBlendModeScreen;
+        leftIcon.colorBlendFactor = .8;
+        leftIcon.color = [SKColor tlp_blueColor];
+        leftIcon.position = CGPointMake(1.5 * d, CGRectGetHeight(self.frame) - d);
+        [self addChild:leftIcon];
+    }
+    else
+    {
+        leftIcon.texture = [SKTexture textureWithImageNamed:leftImage];
+    }
+    
+    NSString *rightImage = self.isPlayerPlayingTwo? @"user.png" : @"computer.png";
+    SKSpriteNode *rightIcon = (SKSpriteNode *)[self childNodeWithName:IconRight];
+    if (!rightIcon)
+    {
+        rightIcon = [SKSpriteNode spriteNodeWithImageNamed:leftImage];
+        rightIcon.name = IconRight;
+        rightIcon.blendMode = SKBlendModeScreen;
+        rightIcon.colorBlendFactor = .8;
+        rightIcon.color = [SKColor tlp_blueColor];
+        rightIcon.position = CGPointMake(CGRectGetWidth(self.frame) - (1.5 * d), CGRectGetHeight(self.frame) - d);
+        [self addChild:rightIcon];
+    }
+    else
+    {
+        rightIcon.texture = [SKTexture textureWithImageNamed:rightImage];
     }
 }
 
@@ -294,8 +339,9 @@ CGFloat bpmForTempo(NSInteger tempo) {
 - (void)stopMetro
 {
     // remove existing note guides
+    NSArray *exception = @[BaseLine, NoteGuideLine, IconLeft, IconRight];
     [[self children] enumerateObjectsUsingBlock:^(SKNode *node, NSUInteger idx, BOOL *stop) {
-        if (![node.name isEqualToString:BaseLine] && ![node.name isEqualToString:NoteGuideLine])
+        if (![exception containsObject:node.name])
         {
             [node runAction:[SKAction fadeAlphaTo:0. duration:.4] completion:^{
                 [node removeFromParent];
@@ -371,7 +417,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
 - (void)metronomeTick:(BOOL)even
 {
     CGFloat width = positionForStartOfLine(4, self.frame).x - positionForStartOfLine(1, self.frame).x;
-    SKColor *color = even? [SKColor tlp_orangeColor] : [[SKColor tlp_orangeColor] colorWithAlphaComponent:.0];
+    SKColor *color = even? [SKColor tlp_orangeColor] : [[SKColor tlp_orangeColor] colorWithAlphaComponent:.2];
     
     SKSpriteNode *line = [[SKSpriteNode alloc] initWithColor:color size:CGSizeMake(width, 6.)];
     line.name = even? MetroLine : @"";
@@ -424,6 +470,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
 {
     if (self.isTitleVisible)
     {
+        [self drawIcons];
         [self.messenger clearAllMessage];
         self.titleVisible = NO;
     }

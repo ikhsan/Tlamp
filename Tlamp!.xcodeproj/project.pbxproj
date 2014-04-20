@@ -16,6 +16,8 @@
 		46423D7F18FAFEFF00468D05 /* TLPLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 46423D7E18FAFEFF00468D05 /* TLPLine.m */; };
 		466192001900A9220024965B /* TLPSFX.m in Sources */ = {isa = PBXBuildFile; fileRef = 466191FF1900A9220024965B /* TLPSFX.m */; };
 		466192021900A9350024965B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 466192011900A9350024965B /* AudioToolbox.framework */; };
+		468AAF0F1903494C0003B864 /* computer.png in Resources */ = {isa = PBXBuildFile; fileRef = 468AAF0D1903494C0003B864 /* computer.png */; };
+		468AAF1219034A380003B864 /* user.png in Resources */ = {isa = PBXBuildFile; fileRef = 468AAF1119034A380003B864 /* user.png */; };
 		4692791D18FBCC8500E541A5 /* TLPGuideNote.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692791C18FBCC8500E541A5 /* TLPGuideNote.m */; };
 		4692792018FBD10C00E541A5 /* SKAction+Tlamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692791F18FBD10C00E541A5 /* SKAction+Tlamp.m */; };
 		4692792418FC0AF000E541A5 /* SKLabelNode+Tlamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 4692792318FC0AF000E541A5 /* SKLabelNode+Tlamp.m */; };
@@ -75,6 +77,8 @@
 		466191FE1900A9220024965B /* TLPSFX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TLPSFX.h; path = Utilities/TLPSFX.h; sourceTree = "<group>"; };
 		466191FF1900A9220024965B /* TLPSFX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TLPSFX.m; path = Utilities/TLPSFX.m; sourceTree = "<group>"; };
 		466192011900A9350024965B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		468AAF0D1903494C0003B864 /* computer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = computer.png; sourceTree = "<group>"; };
+		468AAF1119034A380003B864 /* user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user.png; sourceTree = "<group>"; };
 		4692791B18FBCC8500E541A5 /* TLPGuideNote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLPGuideNote.h; sourceTree = "<group>"; };
 		4692791C18FBCC8500E541A5 /* TLPGuideNote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLPGuideNote.m; sourceTree = "<group>"; };
 		4692791E18FBD10C00E541A5 /* SKAction+Tlamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SKAction+Tlamp.h"; path = "Utilities/SKAction+Tlamp.h"; sourceTree = "<group>"; };
@@ -220,6 +224,8 @@
 				46CD48ED19008E8700ECF0B3 /* Audios */,
 				46CD48F519008E8700ECF0B3 /* Particles */,
 				46CD48FA19008E8700ECF0B3 /* Pattern */,
+				468AAF0D1903494C0003B864 /* computer.png */,
+				468AAF1119034A380003B864 /* user.png */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -433,6 +439,8 @@
 				46CD490819008E8700ECF0B3 /* gendang.json in Resources */,
 				46EAB3CD18F9D042002AAEA8 /* Credits.rtf in Resources */,
 				46CD48FE19008E8700ECF0B3 /* gendang_open.wav in Resources */,
+				468AAF1219034A380003B864 /* user.png in Resources */,
+				468AAF0F1903494C0003B864 /* computer.png in Resources */,
 				46CD490719008E8700ECF0B3 /* spark.png in Resources */,
 				46CD48FF19008E8700ECF0B3 /* talempong_pacik_01.wav in Resources */,
 				46CD490619008E8700ECF0B3 /* HitParticle.sks in Resources */,

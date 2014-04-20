@@ -29,6 +29,11 @@ See [`License`](https://github.com/ixnixnixn/) for more detail.
 
 ## Credits
 
+"Computer" by Erin Standley from [The Noun Project](http://thenounproject.com)
+
+"User" by Denis Chenu from [The Noun Project](http://thenounproject.com)
+
+
 Tlamp! was created by Ikhsan Assaat. 
 
 Feel free to contact me, on [@ixnixnixn](http://twitter.com/ixnixnixn) or [ikhsan.assaat@gmail.com](mailto:ikhsan.assaat@gmail.com)

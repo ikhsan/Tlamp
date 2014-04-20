@@ -10,6 +10,8 @@
 #import "TLPMainScene.h"
 #import "IXNXboxDrumpad.h"
 
+#define DEBUG 1
+
 @interface TLPAppDelegate () <IXNXboxDrumpadDelegate>
 
 @property (strong, nonatomic) IXNXboxDrumpad *drumpad;
@@ -31,8 +33,10 @@
     scene.scaleMode = SKSceneScaleModeAspectFit;
     [self.skView presentScene:scene];
 
+#ifdef DEBUG
     self.skView.showsFPS = YES;
     self.skView.showsNodeCount = YES;
+#endif
 }
 
 - (void)checkForDevices

@@ -17,13 +17,12 @@
 
 SKColor* valuatorColor(CGFloat mark)
 {
-//    CGFloat r = .94 - (.64 * mark);
-//    CGFloat g = .20 + (.68 * mark);
-//    CGFloat b = .24 + (.30 * mark);
-    CGFloat r = 1. - mark;
-    CGFloat g = mark;
-    CGFloat b = 0.;
-    
+    CGFloat r = .94 - (.64 * mark);
+    CGFloat g = .20 + (.68 * mark);
+    CGFloat b = .24 + (.30 * mark);
+//    CGFloat r = 1. - mark;
+//    CGFloat g = mark;
+//    CGFloat b = 0.;    
     
     return [SKColor colorWithRed:r green:g blue:b alpha:1.];
 }
