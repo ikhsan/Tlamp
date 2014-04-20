@@ -11,7 +11,7 @@
 // file loader
 NSString* loadParticle(NSString *name);
 NSArray* loadPatterns();
-NSArray* loadGrooves();
+NSArray* loadRhythms();
 
 // color picker
 SKColor* color(int note);

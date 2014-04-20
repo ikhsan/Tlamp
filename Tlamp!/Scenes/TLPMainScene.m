@@ -22,6 +22,7 @@
 #import "TLPMetronome.h"
 #import "TLPIcon.h"
 #import "TLPPatternBank.h"
+#import "TLPRhythmBank.h"
 
 #import "TLPMainScene.h"
 
@@ -32,7 +33,7 @@ NSString *const NoteGuideLine = @"me.ikhsan.tlamp.noteGuideLine";
 static CGFloat Threshold = .5;
 static CGFloat PointDistance = 30.;
 
-@interface TLPMainScene () <TLPMetronomeDelegate, TLPPatternBankDelegate>
+@interface TLPMainScene () <TLPMetronomeDelegate, TLPPatternBankDelegate, TLPRhythmBankDelegate>
 
 @property (nonatomic, getter = isGuideNotePlaying) BOOL guideNotePlaying;
 @property (nonatomic, getter = isTitleVisible) BOOL titleVisible;
@@ -42,9 +43,10 @@ static CGFloat PointDistance = 30.;
 @property (strong, nonatomic) TLPMessenger *messenger;
 @property (strong, nonatomic) TLPMetronome *metronome;
 @property (strong, nonatomic) TLPPatternBank *patternBank;
+@property (strong, nonatomic) TLPRhythmBank *rhythmBank;
 
-@property (strong, nonatomic) NSArray *grooves;
-@property (nonatomic) NSUInteger activeGrooves;
+//@property (strong, nonatomic) NSArray *grooves;
+//@property (nonatomic) NSUInteger activeGrooves;
 
 @end
 
@@ -58,19 +60,16 @@ static CGFloat PointDistance = 30.;
 
     // initial property values
     _guideNotePlaying = YES;
-    _activeGrooves = 0;
     self.backgroundColor = [SKColor colorWithWhite:.05 alpha:1.0];
     
     // setting delegate
     self.messenger = [[TLPMessenger alloc] initWithScene:self];
     [[TLPSFX player] setScene:self];
     
-    // load guide and backing patterns
-    self.grooves = loadGrooves();
-    
     // load objects (metronome, pattern bank)
     self.metronome = [TLPMetronome createMetronomeWithDelegate:self];
     self.patternBank = [TLPPatternBank createBankWithDelegate:self];
+    self.rhythmBank = [TLPRhythmBank createRhythmBankWithDelegate:self];
 
     return self;
 }
@@ -93,18 +92,6 @@ static CGFloat PointDistance = 30.;
      @"Please try play green & blue notes" :
      @"Computer will play green & blue notes for you"];
     [self drawIcons];
-}
-
-- (void)setActiveGrooves:(NSUInteger)activeGrooves
-{
-    _activeGrooves = activeGrooves % (self.grooves.count + 1);
-    
-    NSString *m = (_activeGrooves == 0)?
-        @"Using only clicks" :
-        [NSString stringWithFormat:@"Rhythm #%lu", (unsigned long)_activeGrooves];
-    
-    [self.messenger showMessage:m];
-    [self.messenger showSmallMessage:@"Changing backing rhythm"];
 }
 
 #pragma mark - Scene's method after its ready
@@ -208,6 +195,15 @@ static CGFloat PointDistance = 30.;
     [self.messenger showSmallMessage:@"Changing playing pattern"];
 }
 
+#pragma mark - Rhythm Bank delegate methods
+
+- (void)rhythmBankDidChangeRhythm:(TLPRhythmBank *)bank
+{
+    NSString *m = (bank.activeRhythm == 0)? @"Using only clicks" : [NSString stringWithFormat:@"Rhythm #%lu", (unsigned long)bank.activeRhythm];
+    [self.messenger showMessage:m];
+    [self.messenger showSmallMessage:@"Changing backing rhythm"];
+}
+
 #pragma mark - Note hits actions
 
 - (void)noteHit:(int)n
@@ -258,40 +254,29 @@ static CGFloat PointDistance = 30.;
     [self addChild:valuator];
 }
 
-- (void)incrementBacksound
-{
-    self.activeGrooves++;
-}
-
 #pragma mark - Tickers
 
 - (void)tickNotesAtCount:(NSUInteger)count
 {
     for (int i=0; i < 4; i++) {
         if (![self.patternBank shouldHitNote:i atCount:count]) continue;
-        
         [self noteTick:(i+1)];
     }
 }
 
 - (void)tickGrooveAtCount:(NSNumber *)count
 {
-    if (self.activeGrooves == 0) return;
+    if (self.rhythmBank.activeRhythm == 0) return;
     
-    NSArray *groove = self.grooves[self.activeGrooves-1];
-    
-    for (int i = 0; i < 2; i++) {
+    NSArray *hits = @[@(GendangHitOpen), @(GendangHitClosed)];
+    [hits enumerateObjectsUsingBlock:^(NSNumber *hit, NSUInteger idx, BOOL *stop) {
+        NSUInteger gendangHit = [hit integerValue];
         NSInteger tick = ([count integerValue] - 1) * 2;
         
-        int gendangHit = (i == GendangHitOpen)? GendangHitOpen : GendangHitClosed;
-        
-        if ([groove[i][tick] boolValue]) {
-            [[TLPSFX player] playGendang:gendangHit];
-        }
-        if ([groove[i][tick + 1] boolValue]) {
+        if ([self.rhythmBank shouldPlayNote:gendangHit atCount:tick]) [[TLPSFX player] playGendang:gendangHit];
+        if ([self.rhythmBank shouldPlayNote:gendangHit atCount:(tick + 1)])
             [[TLPSFX player] playGendang:gendangHit withDelay:(self.metronome.beat / 4.)];
-        }
-    }
+    }];
 }
 
 - (void)metronomeTick:(BOOL)even
@@ -389,7 +374,8 @@ static CGFloat PointDistance = 30.;
             
         // groove vs metronome click
         case kVK_ANSI_0:
-            [self incrementBacksound];
+            [self.rhythmBank switchRhythm];
+            break;
             
         default: break;
     }

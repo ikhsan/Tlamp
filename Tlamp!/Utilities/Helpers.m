@@ -28,7 +28,7 @@ NSArray* loadPatterns()
     return loadJSON(@"talempong");
 }
 
-NSArray* loadGrooves()
+NSArray* loadRhythms()
 {
     return loadJSON(@"gendang");
 }
