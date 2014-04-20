@@ -21,6 +21,7 @@
 #import "TLPMessenger.h"
 #import "TLPMetronome.h"
 #import "TLPIcon.h"
+#import "TLPPatternBank.h"
 
 #import "TLPMainScene.h"
 
@@ -31,7 +32,7 @@ NSString *const NoteGuideLine = @"me.ikhsan.tlamp.noteGuideLine";
 static CGFloat Threshold = .5;
 static CGFloat PointDistance = 30.;
 
-@interface TLPMainScene () <TLPMetronomeDelegate>
+@interface TLPMainScene () <TLPMetronomeDelegate, TLPPatternBankDelegate>
 
 @property (nonatomic, getter = isGuideNotePlaying) BOOL guideNotePlaying;
 @property (nonatomic, getter = isTitleVisible) BOOL titleVisible;
@@ -40,9 +41,8 @@ static CGFloat PointDistance = 30.;
 @property (nonatomic, getter = isPlayerPlayingTwo) BOOL playerPlayingTwo;
 @property (strong, nonatomic) TLPMessenger *messenger;
 @property (strong, nonatomic) TLPMetronome *metronome;
+@property (strong, nonatomic) TLPPatternBank *patternBank;
 
-@property (strong, nonatomic) NSArray *patterns;
-@property (nonatomic) NSUInteger activePattern;
 @property (strong, nonatomic) NSArray *grooves;
 @property (nonatomic) NSUInteger activeGrooves;
 
@@ -59,7 +59,6 @@ static CGFloat PointDistance = 30.;
     // initial property values
     _guideNotePlaying = YES;
     _activeGrooves = 0;
-    _activePattern = 1;
     self.backgroundColor = [SKColor colorWithWhite:.05 alpha:1.0];
     
     // setting delegate
@@ -67,12 +66,11 @@ static CGFloat PointDistance = 30.;
     [[TLPSFX player] setScene:self];
     
     // load guide and backing patterns
-    self.patterns = loadPatterns();
     self.grooves = loadGrooves();
     
-    // load metronome
-    TLPMetronome *m = [TLPMetronome createMetronomeWithDelegate:self];
-    self.metronome = m;
+    // load objects (metronome, pattern bank)
+    self.metronome = [TLPMetronome createMetronomeWithDelegate:self];
+    self.patternBank = [TLPPatternBank createBankWithDelegate:self];
 
     return self;
 }
@@ -95,16 +93,6 @@ static CGFloat PointDistance = 30.;
      @"Please try play green & blue notes" :
      @"Computer will play green & blue notes for you"];
     [self drawIcons];
-}
-
-- (void)setActivePattern:(NSUInteger)activePattern
-{
-    if (activePattern < 1 || activePattern > (self.patterns.count)) return;
-    
-    _activePattern = activePattern;
-    
-    [self.messenger showMessage:[NSString stringWithFormat:@"Pattern #%lu", (unsigned long)_activePattern]];
-    [self.messenger showSmallMessage:@"Changing playing pattern"];
 }
 
 - (void)setActiveGrooves:(NSUInteger)activeGrooves
@@ -148,8 +136,6 @@ static CGFloat PointDistance = 30.;
     }
 }
 
-#pragma mark - Icon drawers
-
 - (void)drawIcons
 {
     NSArray *xs = @[@(1.5 * 60.), @(CGRectGetWidth(self.frame) - (1.5 * 60.))];
@@ -182,10 +168,9 @@ static CGFloat PointDistance = 30.;
     __block int count = 4;
     
     SKAction *wait = [SKAction waitForDuration:metronome.beat];
-    
     SKAction *tick = [SKAction runBlock:^{
         if (count == 4) {
-            NSString *m = [NSString stringWithFormat:@"pattern %d (%.0fbpm)", (int)self.activePattern, metronome.bpm];
+            NSString *m = [NSString stringWithFormat:@"pattern %d (%.0fbpm)", (int)self.patternBank.activePattern, metronome.bpm];
             [self.messenger showMessage:m withDuration:(metronome.beat * 3)];
         }
         
@@ -215,6 +200,13 @@ static CGFloat PointDistance = 30.;
     }];
 }
 
+#pragma mark - Pattern Bank delegate methods
+
+- (void)patternBankDidChangeActivePattern:(TLPPatternBank *)bank
+{
+    [self.messenger showMessage:[NSString stringWithFormat:@"Pattern #%lu", (unsigned long)bank.activePattern]];
+    [self.messenger showSmallMessage:@"Changing playing pattern"];
+}
 
 #pragma mark - Note hits actions
 
@@ -266,16 +258,6 @@ static CGFloat PointDistance = 30.;
     [self addChild:valuator];
 }
 
-- (void)switchRightPattern
-{
-    self.activePattern++;
-}
-
-- (void)switchLeftPattern
-{
-    self.activePattern--;
-}
-
 - (void)incrementBacksound
 {
     self.activeGrooves++;
@@ -285,9 +267,8 @@ static CGFloat PointDistance = 30.;
 
 - (void)tickNotesAtCount:(NSUInteger)count
 {
-    NSArray *pat = self.patterns[self.activePattern-1];
     for (int i=0; i < 4; i++) {
-        if (![pat[i][count - 1] boolValue]) continue;
+        if (![self.patternBank shouldHitNote:i atCount:count]) continue;
         
         [self noteTick:(i+1)];
     }
@@ -400,10 +381,10 @@ static CGFloat PointDistance = 30.;
 
         // pattern slider (right arrow, left arrow)
         case kVK_RightArrow:
-            [self switchRightPattern];
+            [self.patternBank switchToRight];
             break;
         case kVK_LeftArrow:
-            [self switchLeftPattern];
+            [self.patternBank switchToLeft];
             break;
             
         // groove vs metronome click
