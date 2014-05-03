@@ -25,7 +25,7 @@ It was built using Apple's `SpriteKit`. Tested only in Mac OS X 10.9 and Xcode 5
 
 Tlamp! is available under the MIT License.
 
-See [`License`](https://github.com/ixnixnixn/) for more detail.
+See [`License`](https://github.com/ixnixnixn/Tlamp/blob/master/License) for more detail.
 
 ## Credits
 

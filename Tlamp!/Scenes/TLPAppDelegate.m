@@ -10,7 +10,7 @@
 #import "TLPMainScene.h"
 #import "IXNXboxDrumpad.h"
 
-#define _DEBUG_ 1
+//#define _DEBUG_ 1
 
 @interface TLPAppDelegate () <IXNXboxDrumpadDelegate>
 

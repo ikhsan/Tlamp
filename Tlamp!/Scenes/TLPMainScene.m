@@ -45,9 +45,6 @@ static CGFloat PointDistance = 30.;
 @property (strong, nonatomic) TLPPatternBank *patternBank;
 @property (strong, nonatomic) TLPRhythmBank *rhythmBank;
 
-//@property (strong, nonatomic) NSArray *grooves;
-//@property (nonatomic) NSUInteger activeGrooves;
-
 @end
 
 @implementation TLPMainScene

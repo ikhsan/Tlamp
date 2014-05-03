@@ -127,7 +127,7 @@ CGFloat bpmForTempo(NSInteger tempo) {
 
 - (void)stop
 {    
-    self.playing = YES;
+    self.playing = NO;
     
     // reset ticker
     self.ticker = 0;
